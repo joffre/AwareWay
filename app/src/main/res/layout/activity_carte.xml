@@ -1,0 +1,325 @@
+<LinearLayout
+    android:id="@+id/conteneur"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context="com.pji.de.awareway.activity.CarteActivity"
+    android:orientation="vertical"
+	android:background="#e3dede">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:id="@+id/sousConteneur"
+            android:layout_width="fill_parent"
+            android:layout_height="120dp">
+            <LinearLayout
+                android:orientation="vertical"
+                android:id="@+id/panelSousConteneur"
+                android:layout_width="124dp"
+                android:layout_height="fill_parent"
+                android:background="#322f2f"
+                android:paddingLeft="10dp"
+                android:paddingTop="5dp"
+                android:paddingBottom="5dp"
+                >
+                <TextView
+                    android:id="@+id/trajet"
+                    android:layout_weight="0.15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:textSize="12sp" />
+                <TextView
+                    android:id="@+id/kmcourant"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.70"
+                    android:textSize="40dp"
+                    android:text="--.-"
+                    android:textColor="#ffffff"
+                    />
+                <TextView
+                    android:id="@+id/terminus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.15"
+                    android:textSize="12sp"
+                    android:textColor="#ffffff"
+                    android:text="Terminus : --.-km"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="0.20">
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/oldPoisDistance"
+                        android:textColor="#646c73"
+                        android:textSize="12sp"
+                        android:text="--"
+                        android:layout_weight="0.25"
+                        />
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/oldPoisName"
+                        android:textColor="#646c73"
+                        android:textSize="12sp"
+                        android:text="_____________"
+                        android:layout_weight="0.50"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/oldPoisPk"
+                        android:textSize="12sp"
+                        android:textColor="#646c73"
+                        android:text="--.-"
+                        android:layout_weight="0.25"
+                        android:gravity="end"/>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="0.20">
+
+                    <TextView
+                        android:id="@+id/currentPoisDistance"
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:textColor="#646c73"
+                        android:textSize="23sp"
+                        android:text="--"
+                        android:layout_weight="0.25"/>
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:textColor="#646c73"
+                        android:id="@+id/currentPoisName"
+                        android:textSize="23sp"
+                        android:text="_____________"
+                        android:layout_weight="0.50"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/currentPoisPk"
+                        android:textSize="23sp"
+                        android:text="--.-"
+                        android:layout_weight="0.25"
+                        android:gravity="end"
+                        android:textColor="#646c73" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="0.20">
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/nextPois1Distance"
+                        android:textSize="12sp"
+                        android:text="--"
+                        android:layout_weight="0.25"/>
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/nextPois1Name"
+                        android:textSize="12sp"
+                        android:text="_____________"
+                        android:layout_weight="0.50"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/nextPois1Pk"
+                        android:textSize="12sp"
+                        android:text="--.-"
+                        android:layout_weight="0.25"
+                        android:gravity="end"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_weight="0.20">
+
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/nextPois2Distance"
+                        android:textSize="12sp"
+                        android:text="--"
+                        android:layout_weight="0.25"/>
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/nextPois2Name"
+                        android:textSize="12sp"
+                        android:text="_____________"
+                        android:layout_weight="0.50"
+                        android:gravity="center"/>
+
+                    <TextView
+                        android:layout_height="match_parent"
+                        android:layout_width="wrap_content"
+                        android:id="@+id/nextPois2Pk"
+                        android:textSize="12sp"
+                        android:text="--.-"
+                        android:layout_weight="0.25"
+                        android:gravity="end"/>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <Button
+            android:id="@+id/prev"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="previous" />
+
+        <Button
+            android:id="@+id/next"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="next" />
+    </LinearLayout>-->
+    <ViewSwitcher
+    android:id="@+id/viewswitcher"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+    <LinearLayout
+        	android:layout_width="match_parent"
+   			android:layout_height="wrap_content"
+   			android:orientation="vertical"
+		android:measureWithLargestChild="false">
+		<org.osmdroid.views.MapView
+		        android:layout_width="match_parent"
+	   			android:layout_height="match_parent"
+		        android:id="@+id/mapView"
+            android:layout_weight="1" />
+
+
+		<Button
+			android:layout_width="fill_parent"
+			android:layout_height="match_parent"
+			android:text="Création d'un POI"
+            android:textSize="14px"
+            android:layout_weight="1"
+            android:id="@+id/PoisCreator"
+            android:onClick="createPoi" />
+
+
+	</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:paddingStart="10dp"
+        android:paddingRight="10dp"
+        android:background="#322f2f">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Détail du POI"
+            android:gravity="center"
+            android:textStyle="bold"
+            android:textSize="50dp"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/nomPoi"
+            android:text="@string/nomPoi"
+            android:gravity="center"
+            android:textSize="40dp"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/poiDescription"
+            android:text="@string/descPoi"
+            android:gravity="center"
+            android:textSize="20dp"
+            android:textColor="#ffffff"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/poiWeb"
+            android:textSize="20dp"
+            android:text="@string/webPoi"
+            android:gravity="center"
+            android:textColor="#ffffff"/>
+
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="30dp"
+            android:id="@+id/toMap"
+            android:text="@string/toMap"
+            android:onClick="toMap"/>
+    </LinearLayout>
+
+
+
+
+    </ViewSwitcher>
+
+</LinearLayout>

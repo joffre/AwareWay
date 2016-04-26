@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+	
+    <item
+        android:id="@+id/action_options"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_options"/>
+    
+    <item
+        android:id="@+id/action_a_propos"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_a_propos"/>
+
+</menu>
