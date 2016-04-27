@@ -1,7 +1,15 @@
 package com.pji.de.awareway.webbridge;
 
+import android.content.ContentResolver;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.provider.MediaStore;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -9,6 +17,7 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.ArrayList;
@@ -17,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.gson.Gson;
+import com.pji.de.awareway.MainActivity;
 import com.pji.de.awareway.R;
 import com.pji.de.awareway.activity.CarteActivity;
 import com.pji.de.awareway.bean.AAUser;
@@ -49,7 +59,7 @@ public class AABridge {
         AAUser user = new AAUser();
         Map<String, String> params = new HashMap<String, String>();
         params.put("signType", "simple");
-        params.put("emailUtilisateur", email);
+        params.put("emailUtilisateur", email.toLowerCase());
         params.put("mdpUtilisateur", password);
 
         String result = performPostCall(CONTEXT_PATH+USER_BRIDGE+"login", params);
@@ -57,6 +67,7 @@ public class AABridge {
         if(!result.isEmpty() && !result.equals("error")){
             Gson gson = new Gson();
             user = gson.fromJson(result, AAUser.class);
+            System.out.println("Bienvenue : " + user.getFirstName() + " " + user.getLastName() + " ("+ user.getEmail() +")");
         }
         return user;
     }
@@ -65,16 +76,20 @@ public class AABridge {
         AAUser user = new AAUser();
         Map<String, String> params = new HashMap<String, String>();
         params.put("signType", "google");
-        params.put("emailUtilisateur", email);
+        params.put("emailUtilisateur", email.toLowerCase());
         params.put("mdpUtilisateur", "null");
 
         String result = performPostCall(CONTEXT_PATH+USER_BRIDGE+"login", params);
         System.out.println("Google Sign In : " + result);
+        if(!result.isEmpty() && !result.equals("error")){
+            Gson gson = new Gson();
+            user = gson.fromJson(result, AAUser.class);
+        }
         return user;
     }
 
     public static boolean createPoi(Poi poi){
-
+        String passerelle = OSM_BRIDGE;
         Map<String, String> params = new HashMap<String, String>();
         params.put("latitude", poi.getLat());
         params.put("longitude", poi.getLon());
@@ -86,8 +101,11 @@ public class AABridge {
         params.put("commentaire", poi.getCommentaire());
         params.put("lienImage", poi.getLienImage());
         params.put("lienWeb", poi.getLienWeb());
-
-        performPostCall(CONTEXT_PATH + OSM_BRIDGE + "ajouterPoi", params);
+        if(MainActivity.userManager.isAuthentified()) {
+            params.put("idUser", MainActivity.userManager.getUser().getIdUser().toString());
+            passerelle = USER_BRIDGE;
+        }
+        performPostCall(CONTEXT_PATH + passerelle + "ajouterPoi", params);
         return false;
     }
 
@@ -138,7 +156,7 @@ public class AABridge {
     private static String getPostDataString(Map<String, String> params) throws UnsupportedEncodingException {
         StringBuilder result = new StringBuilder();
         boolean first = true;
-        for(Map.Entry<String, String> entry : params.entrySet()){
+        for(Map.Entry<String, String> entry : params.entrySet()) {
             if (first)
                 first = false;
             else
@@ -148,7 +166,7 @@ public class AABridge {
             result.append("=");
             result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
         }
-
+        Log.d("GetPostDataString : ", result.toString());
         return result.toString();
     }
 
@@ -186,4 +204,31 @@ public class AABridge {
         return result;
     }
 */
+
+    public static Bitmap getBitmapFromURL(String src) {
+        try {
+            java.net.URL url = new java.net.URL(src);
+            HttpURLConnection connection = (HttpURLConnection) url
+                    .openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            Bitmap myBitmap = BitmapFactory.decodeStream(input);
+            return myBitmap;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static Bitmap getBitmapFromURI(ContentResolver contentResolver, Uri uri){
+        Uri imageUri = uri;
+        Bitmap bitmap = null;
+        try {
+            bitmap = MediaStore.Images.Media.getBitmap(contentResolver, imageUri);
+        }catch (IOException e){
+            Log.d("getBitmapFromURI", "Image impossible à récupérer");
+        }
+        return bitmap;
+    }
 }

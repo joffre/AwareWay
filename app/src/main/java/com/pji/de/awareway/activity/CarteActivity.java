@@ -241,6 +241,12 @@ public class CarteActivity extends Activity implements LocationListener {
 
 		if(fLoc == null || fLoc.getStatus().equals(AsyncTask.Status.FINISHED))
 			new FakeLocation().execute(this);*/
+
+		if(MainActivity.userManager.isAuthentified()){
+			poisCreator.setVisibility(View.VISIBLE);
+		} else {
+			poisCreator.setVisibility(View.GONE);
+		}
 	}
 
 

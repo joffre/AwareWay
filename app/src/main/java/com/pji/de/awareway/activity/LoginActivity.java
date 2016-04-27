@@ -19,6 +19,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,6 +33,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.pji.de.awareway.MainActivity;
 import com.pji.de.awareway.R;
 import com.pji.de.awareway.bean.AAUser;
 import com.pji.de.awareway.webbridge.AABridge;
@@ -315,6 +317,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             try {
                 AAUser user = AABridge.login(mEmail, mPassword);
                 // Simulate network access.
+                MainActivity.userManager.setUser(user, null);
+                Log.d(LoginActivity.class.getName(), "Authentificated  : " +MainActivity.userManager.isAuthentified());
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
                 return false;

@@ -5,9 +5,11 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,15 +19,19 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.pji.de.awareway.activity.LoginActivity;
+import com.pji.de.awareway.activity.SignInActivity;
 import com.pji.de.awareway.fragments.AboutFragment;
 import com.pji.de.awareway.fragments.HomeFragment;
 import com.pji.de.awareway.fragments.MapFragment;
 import com.pji.de.awareway.fragments.NotesFragment;
 import com.pji.de.awareway.fragments.PreferencesFragment;
+import com.pji.de.awareway.utilitaires.UserManager;
 import com.pji.de.awareway.webbridge.AABridge;
 
 public class MainActivity extends AppCompatActivity
@@ -34,6 +40,8 @@ public class MainActivity extends AppCompatActivity
     public static Boolean DEBUG = false;
 
     public static String preferenceVue="Carte";
+
+    public static UserManager userManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,19 +65,20 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
+
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         View headerView = navigationView.getHeaderView(0);
         LinearLayout header = (LinearLayout) headerView.findViewById(R.id.header_view);
-        final MainActivity m = this;
         header.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(m,LoginActivity.class);
-                startActivity(intent);
-                Toast.makeText(MainActivity.this, "Se connecter", Toast.LENGTH_SHORT).show();
+                showUserView();
             }
         });
+
+        userManager = new UserManager();
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -86,6 +95,55 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, HomeFragment.newInstance())
                 .commit();
+    }
+
+    public void showUserView(){
+        if(userManager.isAuthentified()){
+
+        } else {
+            Intent intent = new Intent(this,SignInActivity.class);
+            startActivity(intent);
+            Toast.makeText(MainActivity.this, "Se connecter", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+        if(!userManager.isAlreadyUpdated()){
+            updateUserHeader();
+            userManager.notifyUpdate();
+        }
+    }
+
+    private void updateUserHeader() {
+        Log.d(MainActivity.class.getName(), "updateUserHeader start");
+
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        LinearLayout header = (LinearLayout) headerView.findViewById(R.id.header_view);
+        header = (LinearLayout) headerView.findViewById(R.id.header_view);
+        ImageView imageView = (ImageView) header.findViewById(R.id.imageView);
+
+        TextView textGras = (TextView) header.findViewById(R.id.header_text_bold);
+        Log.d(MainActivity.class.getName(), "User  : " + userManager.getUser());
+        Log.d(MainActivity.class.getName(), "Authentificated  : " +MainActivity.userManager.isAuthentified());
+        if (userManager.isAuthentified()) {
+            Log.d(MainActivity.class.getName(), "is Authentified");
+            textGras.setText(R.string.account);
+            if (userManager.isImaged()) {
+                Bitmap profilPic = AABridge.getBitmapFromURI(getContentResolver(), userManager.getProfilImageURL());
+                imageView.setImageBitmap(profilPic);
+            } else {
+                Log.d(MainActivity.class.getName(), "without profil pic");
+                imageView.setImageResource(R.mipmap.ic_launcher);
+            }
+        } else {
+            Log.d(MainActivity.class.getName(), "not Authentified");
+            textGras.setText(R.string.tologin);
+            //TODO change image
+        }
+        Log.d(MainActivity.class.getName(), "updateUserHeader end");
     }
 
     @Override
