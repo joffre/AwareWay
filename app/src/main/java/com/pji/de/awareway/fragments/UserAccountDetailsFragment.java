@@ -7,9 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.pji.de.awareway.R;
 import com.pji.de.awareway.activity.OnFragmentInteractionListener;
+
+import org.w3c.dom.Text;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,13 +63,19 @@ public class UserAccountDetailsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_account_details, container, false);
+
+        View v = inflater.inflate(R.layout.fragment_user_account_details, container, false);
+        TextView textView = (TextView) v.findViewById(R.id.user_account_text_title);
+        textView.setText("Détails de votre compte");
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

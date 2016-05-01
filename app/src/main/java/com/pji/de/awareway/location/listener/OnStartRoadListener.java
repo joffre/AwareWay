@@ -3,6 +3,8 @@ package com.pji.de.awareway.location.listener;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.res.AssetManager;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -11,7 +13,9 @@ import android.widget.Toast;
 
 import com.pji.de.awareway.MainActivity;
 import com.pji.de.awareway.R;
+import com.pji.de.awareway.liste.ListePois;
 import com.pji.de.awareway.utilitaires.XmlTask;
+import com.pji.de.awareway.webbridge.AABridge;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,7 +54,9 @@ public class OnStartRoadListener implements Button.OnClickListener
         if (spinner.getSelectedItemPosition() > 0) {
             String nomLigne = (String) spinner.getSelectedItem();
             String[] tabLigne = nomLigne.split(": ");
-                AsynTache.execute(String.format(URL, tabLigne[2].trim()));
+            Long idRelation = Long.parseLong(tabLigne[2].trim());
+            AsynTache.execute(String.format(URL, idRelation));
+
             try {
                 String result = AsynTache.get();
 
@@ -75,6 +81,9 @@ public class OnStartRoadListener implements Button.OnClickListener
                         e.printStackTrace();
                     }
                 }
+                UserTravelNotifyTask travelNotifyTask = new UserTravelNotifyTask(idRelation);
+                travelNotifyTask.execute((Void) null);
+
                 ((com.pji.de.awareway.fragments.HomeFragment) fragment).populateListeNoeud(result,
                         tabLigne);
 
@@ -92,5 +101,33 @@ public class OnStartRoadListener implements Button.OnClickListener
             Toast toast = Toast.makeText(context, view.getResources().getString(R.string.pois_fragment_no_road_selected), duration);
             toast.show();
         }
+    }
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class UserTravelNotifyTask extends AsyncTask<Void, Void, Boolean> {
+
+        Long idRelation;
+        UserTravelNotifyTask(Long idRelation) {
+            this.idRelation = idRelation;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            if(MainActivity.userManager.isAuthentified()){
+                Integer idUser = MainActivity.userManager.getUser().getIdUser();
+                return AABridge.notifyTraveledRelationByUser(idRelation, idUser);
+            } else {
+                return AABridge.notifyTraveledRelation(idRelation);
+            }
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            Log.d("User Travel Notify : ", success.toString());
+        }
+
     }
 }

@@ -198,12 +198,12 @@ public class AABridge {
     }
 
     public static String performGetCall(String requestURL,
-                                          Map<String, String> getDataParams) {
+                                          Map<String, String> params) {
 
         URL url;
         String response = "";
         try {
-            url = new URL(requestURL);
+            url = new URL(requestURL+"?"+getDataParamString(params));
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setReadTimeout(15000);
@@ -212,15 +212,6 @@ public class AABridge {
             //conn.setDoInput(true);
            // conn.setDoOutput(true);
 
-
-            OutputStream os = conn.getOutputStream();
-            BufferedWriter writer = new BufferedWriter(
-                    new OutputStreamWriter(os, "UTF-8"));
-            writer.write(getDataParamString(getDataParams));
-
-            writer.flush();
-            writer.close();
-            os.close();
             int responseCode=conn.getResponseCode();
 
             if (responseCode == HttpsURLConnection.HTTP_OK) {

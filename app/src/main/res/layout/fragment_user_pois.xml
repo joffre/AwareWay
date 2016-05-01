@@ -4,10 +4,13 @@
     android:layout_height="match_parent"
     tools:context="com.pji.de.awareway.fragments.UserPoisFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
+        android:id="@+id/user_pois_text_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content" />
+    <ListView
+        android:id="@+id/list_pois"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </FrameLayout>

@@ -1,6 +1,7 @@
 package com.pji.de.awareway.activity;
 
 import android.app.ActionBar;
+import android.app.FragmentTransaction;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -30,6 +31,7 @@ import com.pji.de.awareway.R;
 import com.pji.de.awareway.fragments.UserAccountDetailsFragment;
 import com.pji.de.awareway.fragments.UserPoisFragment;
 import com.pji.de.awareway.fragments.UserRelationsFragment;
+import com.pji.de.awareway.utilitaires.AwarePreferences;
 
 public class UserPanelActivity extends AppCompatActivity implements OnFragmentInteractionListener{
 
@@ -73,11 +75,9 @@ public class UserPanelActivity extends AppCompatActivity implements OnFragmentIn
             }
         });
 
-        /*TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 1"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 2"));
-        tabLayout.addTab(tabLayout.newTab().setText("Tab 3"));
-        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);*/
+        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
+        tabLayout.setupWithViewPager(mViewPager);
     }
 
 
@@ -107,6 +107,7 @@ public class UserPanelActivity extends AppCompatActivity implements OnFragmentIn
     private void signOut(){
         MainActivity.userManager.setUser(null, null);
         if(MainActivity.userManager.googleAuthentified()){
+            AwarePreferences.setBooleanPreference(AwarePreferences.GOOGLE_AUTHENTIFIED, false);
             GoogleApiClient mGoogleApiClient = MainActivity.userManager.getGoogleApiClient();
             if(mGoogleApiClient.isConnected()) {
                 Auth.GoogleSignInApi.revokeAccess(mGoogleApiClient).setResultCallback(
@@ -177,11 +178,11 @@ public class UserPanelActivity extends AppCompatActivity implements OnFragmentIn
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             switch(position){
-                case 1 :
+                case 0 :
                     return UserAccountDetailsFragment.newInstance("","");
-                case 2 :
+                case 1 :
                     return UserPoisFragment.newInstance("","");
-                case 3 :
+                case 2 :
                     return UserRelationsFragment.newInstance("","");
             }
             return PlaceholderFragment.newInstance(position + 1);

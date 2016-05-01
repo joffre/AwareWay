@@ -34,6 +34,7 @@ import com.pji.de.awareway.fragments.HomeFragment;
 import com.pji.de.awareway.fragments.MapFragment;
 import com.pji.de.awareway.fragments.NotesFragment;
 import com.pji.de.awareway.fragments.PreferencesFragment;
+import com.pji.de.awareway.utilitaires.AwarePreferences;
 import com.pji.de.awareway.utilitaires.UserManager;
 import com.pji.de.awareway.webbridge.AABridge;
 
@@ -103,6 +104,12 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, HomeFragment.newInstance())
                 .commit();
+
+        AwarePreferences.init(this);
+        if(AwarePreferences.getBooleanPreference(AwarePreferences.GOOGLE_AUTHENTIFIED)){
+            Intent intent = new Intent(this,SignInActivity.class);
+            startActivity(intent);
+        }
     }
 
     public void showUserView(){

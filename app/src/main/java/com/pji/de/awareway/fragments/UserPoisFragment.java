@@ -2,14 +2,19 @@ package com.pji.de.awareway.fragments;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.pji.de.awareway.MainActivity;
 import com.pji.de.awareway.R;
 import com.pji.de.awareway.activity.OnFragmentInteractionListener;
+import com.pji.de.awareway.liste.ListePois;
+import com.pji.de.awareway.webbridge.AABridge;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,16 +65,17 @@ public class UserPoisFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-
-
+        UserPoiLoaderTask userPoiLoaderTask = new UserPoiLoaderTask();
+        userPoiLoaderTask.execute((Void) null);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_user_pois, container, false);
+        View v = inflater.inflate(R.layout.fragment_user_pois, container, false);
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -94,5 +100,36 @@ public class UserPoisFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    public void updateUserPois(ListePois pois){
+        TextView textView = (TextView) getActivity().findViewById(R.id.user_pois_text_title);
+        textView.setText("Voici vos " +pois.size()+" POI(s) :");
+    }
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class UserPoiLoaderTask extends AsyncTask<Void, Void, ListePois> {
+
+        UserPoiLoaderTask() {
+        }
+
+        @Override
+        protected ListePois doInBackground(Void... params) {
+            ListePois pois = null;
+                if(MainActivity.userManager.isAuthentified()){
+                    Integer idUser = MainActivity.userManager.getUser().getIdUser();
+                    pois = AABridge.getUserPois(idUser);
+                }
+            return pois;
+        }
+
+        @Override
+        protected void onPostExecute(final ListePois success) {
+            updateUserPois(success);
+        }
+
     }
 }
