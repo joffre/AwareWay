@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.pji.de.awareway.MainActivity;
 import com.pji.de.awareway.R;
 import com.pji.de.awareway.bean.AAUser;
@@ -19,6 +20,7 @@ public class UserManager {
     Uri profilImageURL;
 
     private boolean updated = false;
+    private GoogleApiClient googleAPIClient = null;
 
     public UserManager(){
     }
@@ -51,5 +53,17 @@ public class UserManager {
 
     public void notifyUpdate(){
         this.updated = true;
+    }
+
+    public void setGoogleAPIClient(GoogleApiClient googleAPIClient) {
+        this.googleAPIClient = googleAPIClient;
+    }
+
+    public boolean googleAuthentified() {
+        return this.googleAPIClient != null;
+    }
+
+    public GoogleApiClient getGoogleApiClient() {
+        return this.googleAPIClient;
     }
 }

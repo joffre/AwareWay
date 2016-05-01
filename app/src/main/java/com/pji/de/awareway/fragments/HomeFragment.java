@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		view = inflater.inflate(R.layout.fragment_pois, null);
+		view = inflater.inflate(R.layout.fragment_home, null);
 
 		// look if your GPS is enable
 		lManager = (LocationManager) getActivity().getSystemService(

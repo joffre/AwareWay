@@ -3,6 +3,7 @@ package com.pji.de.awareway.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
 import com.pji.de.awareway.MainActivity;
 import com.pji.de.awareway.R;
+import com.pji.de.awareway.bean.AAUser;
 import com.pji.de.awareway.webbridge.AABridge;
 
 /**
@@ -39,6 +41,8 @@ public class SignInActivity extends AppCompatActivity implements
     private GoogleApiClient mGoogleApiClient;
     private TextView mStatusTextView;
     private ProgressDialog mProgressDialog;
+
+    private UserLoginTask mAuthTask = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,7 +138,9 @@ public class SignInActivity extends AppCompatActivity implements
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
             mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
-            MainActivity.userManager.setUser(AABridge.loginWithGoogle(acct.getEmail()), acct.getPhotoUrl());
+            mAuthTask = new UserLoginTask(acct);
+            mAuthTask.execute((Void) null);
+            showProgressDialog();
             updateUI(true);
         } else {
             // Signed out, show unauthenticated UI.
@@ -143,6 +149,53 @@ public class SignInActivity extends AppCompatActivity implements
         }
     }
     // [END handleSignInResult]
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final GoogleSignInAccount acct;
+
+        UserLoginTask(GoogleSignInAccount acct) {
+            this.acct = acct;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            try {
+                MainActivity.userManager.setUser(AABridge.loginWithGoogle(acct.getEmail()), acct.getPhotoUrl());
+                Log.d(LoginActivity.class.getName(), "Authentificated (google)  : " +MainActivity.userManager.isAuthentified());
+                Thread.sleep(2000);
+                MainActivity.userManager.setGoogleAPIClient(mGoogleApiClient);
+                if(MainActivity.userManager.isAuthentified()){
+                    updateUI(true);
+                } else {
+                    updateUI(false);
+                }
+            } catch (InterruptedException e) {
+                return false;
+            }
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mAuthTask = null;
+            hideProgressDialog();
+
+            if (success) {
+                finish();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
+            hideProgressDialog();
+        }
+    }
 
     // [START signIn]
     private void signIn() {
@@ -194,7 +247,7 @@ public class SignInActivity extends AppCompatActivity implements
             mProgressDialog.setIndeterminate(true);
         }
 
-        mProgressDialog.show();
+        if(!mProgressDialog.isShowing()) mProgressDialog.show();
     }
 
     private void hideProgressDialog() {
@@ -238,5 +291,11 @@ public class SignInActivity extends AppCompatActivity implements
                 startActivity(browserIntent);
                 break;
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();  // Always call the superclass method first
+        if(MainActivity.userManager.isAuthentified()) finish();
     }
 }

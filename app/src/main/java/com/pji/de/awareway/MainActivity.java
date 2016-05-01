@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -24,8 +25,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.pji.de.awareway.activity.LoginActivity;
 import com.pji.de.awareway.activity.SignInActivity;
+import com.pji.de.awareway.activity.UserPanelActivity;
 import com.pji.de.awareway.fragments.AboutFragment;
 import com.pji.de.awareway.fragments.HomeFragment;
 import com.pji.de.awareway.fragments.MapFragment;
@@ -33,6 +36,11 @@ import com.pji.de.awareway.fragments.NotesFragment;
 import com.pji.de.awareway.fragments.PreferencesFragment;
 import com.pji.de.awareway.utilitaires.UserManager;
 import com.pji.de.awareway.webbridge.AABridge;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -99,7 +107,8 @@ public class MainActivity extends AppCompatActivity
 
     public void showUserView(){
         if(userManager.isAuthentified()){
-
+            Intent intent = new Intent(this,UserPanelActivity.class);
+            startActivity(intent);
         } else {
             Intent intent = new Intent(this,SignInActivity.class);
             startActivity(intent);
@@ -123,7 +132,7 @@ public class MainActivity extends AppCompatActivity
         View headerView = navigationView.getHeaderView(0);
         LinearLayout header = (LinearLayout) headerView.findViewById(R.id.header_view);
         header = (LinearLayout) headerView.findViewById(R.id.header_view);
-        ImageView imageView = (ImageView) header.findViewById(R.id.imageView);
+        CircleImageView imageView = (CircleImageView) header.findViewById(R.id.profile_image);
 
         TextView textGras = (TextView) header.findViewById(R.id.header_text_bold);
         Log.d(MainActivity.class.getName(), "User  : " + userManager.getUser());
@@ -132,8 +141,8 @@ public class MainActivity extends AppCompatActivity
             Log.d(MainActivity.class.getName(), "is Authentified");
             textGras.setText(R.string.account);
             if (userManager.isImaged()) {
-                Bitmap profilPic = AABridge.getBitmapFromURI(getContentResolver(), userManager.getProfilImageURL());
-                imageView.setImageBitmap(profilPic);
+                BitmapLoaderTask bitmapLoaderTask = new BitmapLoaderTask(userManager.getProfilImageURL(), imageView);
+                bitmapLoaderTask.execute((Void) null);
             } else {
                 Log.d(MainActivity.class.getName(), "without profil pic");
                 imageView.setImageResource(R.mipmap.ic_launcher);
@@ -142,6 +151,8 @@ public class MainActivity extends AppCompatActivity
             Log.d(MainActivity.class.getName(), "not Authentified");
             textGras.setText(R.string.tologin);
             //TODO change image
+            int id = getResources().getIdentifier("@android:drawable/ic_menu_edit", null, null);
+            imageView.setImageResource(id);
         }
         Log.d(MainActivity.class.getName(), "updateUserHeader end");
     }
@@ -211,5 +222,42 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void setHeaderImage(Bitmap image, CircleImageView view){
+        view.setImageBitmap(image);
+    }
+
+    /**
+     * Represents an asynchronous login/registration task used to authenticate
+     * the user.
+     */
+    public class BitmapLoaderTask extends AsyncTask<Void, Void, Bitmap> {
+
+        private final CircleImageView imageView;
+        private final String urlImage;
+
+        BitmapLoaderTask(Uri urlImage, CircleImageView imageView) {
+            this.imageView = imageView;
+            this.urlImage = urlImage.toString();
+        }
+
+        @Override
+        protected Bitmap doInBackground(Void... params) {
+            Bitmap profilPic = null;
+            try {
+                URL imageURL = new URL(urlImage);
+                profilPic = AABridge.getBitmapFromURL(imageURL);
+            } catch (MalformedURLException e) {
+                Log.d("Parse image url",e.getMessage());
+            }
+            return profilPic;
+        }
+
+        @Override
+        protected void onPostExecute(final Bitmap success) {
+            setHeaderImage(success, imageView);
+        }
+
     }
 }

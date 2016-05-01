@@ -45,8 +45,12 @@
         <activity
             android:name=".TestInfoPo"
             android:label="@string/title_activity_test_info_po"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activity.SignInActivity" />
+        <activity
+            android:name=".activity.UserPanelActivity"
+            android:label="@string/title_activity_user"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".activity.SignInActivity"></activity>
     </application>
 
 </manifest>

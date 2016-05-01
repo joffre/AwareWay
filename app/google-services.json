@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1066303125006",
+    "project_id": "awareway-1994"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1066303125006:android:7ae003a7267f617b",
+        "android_client_info": {
+          "package_name": "com.pji.de.awareway"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1066303125006-hc13la9urgl0sflnkiptbkedhn9ts8ca.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.pji.de.awareway",
+            "certificate_hash": "6E46F2DF194B0BD7059B5FA3CA792CF4548CEF84"
+          }
+        },
+        {
+          "client_id": "1066303125006-hr8suieun6df5q178ja76hdu3gub0ce9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVtZmK3sz2YsCMGwr2Br08M2G83N33x8U"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
