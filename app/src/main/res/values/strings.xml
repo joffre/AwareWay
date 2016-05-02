@@ -83,7 +83,7 @@
     <string name="webPoi">Pas de lien web</string>
     <string name="toMap">Retour à  la carte</string>
 
-    <string name="title_text">Google Sign-In\nQuickstart</string>
+    <string name="title_text">Bienvenue sur Aware Way\nConnectez-vous ou enregistrez-vous</string>
     !-- Sign-in status messages -->
     <string name="signed_in_fmt">Signed in as: %s</string>
     <string name="signed_in">Signed in</string>

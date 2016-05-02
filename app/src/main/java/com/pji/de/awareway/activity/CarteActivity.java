@@ -1,7 +1,12 @@
 package com.pji.de.awareway.activity;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
@@ -9,6 +14,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -48,7 +54,16 @@ public class CarteActivity extends Activity implements LocationListener {
 	private MapView mMapView;
 	private IMapController mMapController;
 	private OverlayItem current_position;
+
+	/**
+	 * Mode normal
+	 */
 	private LocationManager lManager;
+	/**
+	 * Mode debug
+	 */
+	private FakeLocation fLocation;
+
 	private PathOverlay myPath;
 	private ItemizedIconOverlay<OverlayItem> affichageGares;
 	private ItemizedIconOverlay<OverlayItem> affichagePois;
@@ -62,20 +77,20 @@ public class CarteActivity extends Activity implements LocationListener {
 	private Location dernierLocation;
 	private List<TextView> listeVuePoi;
 	private TextView LineName;
-	private TextView oldPoisDistance,oldPoisName,currentPoisDistance,currentPoisName,
+	private TextView oldPoisDistance, oldPoisName, currentPoisDistance, currentPoisName,
 			currentPoisPk, nextPois1Distance, nextPois1Name, nextPois2Distance,
 			nextPois2Name, nextPois2Pk, oldPoisPk, nextPois1Pk, nomPoi, poiWeb, poiDescription;
 	public Poi currentPoi;
 	private boolean poisInformationsOpen = false;
-    private boolean currentPoiShowed = false;
+	private boolean currentPoiShowed = false;
 	private FakeLocation fLoc;
 	private Button poisCreator;
 	private Location currentLocation;
 	private String idLigne;
-    private int indexOfCurrentPoi;
-    private ViewSwitcher viewSwitcher;
-    private Animation slide_in_left, slide_out_right;
-    private Button toMap;
+	private int indexOfCurrentPoi;
+	private ViewSwitcher viewSwitcher;
+	private Animation slide_in_left, slide_out_right;
+	private Button toMap;
 
 
 	@Override
@@ -83,33 +98,33 @@ public class CarteActivity extends Activity implements LocationListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_carte);
 
-		distanceTerminusTextView = (TextView)findViewById(R.id.terminus);
+		distanceTerminusTextView = (TextView) findViewById(R.id.terminus);
 
-        poiWeb = (TextView)findViewById(R.id.poiWeb);
-        poiDescription = (TextView)findViewById(R.id.poiDescription);
-        nomPoi = (TextView)findViewById(R.id.nomPoi);
-		oldPoisDistance = (TextView)findViewById(R.id.oldPoisDistance);
-		oldPoisName = (TextView)findViewById(R.id.oldPoisName);
-		currentPoisDistance = (TextView)findViewById(R.id.currentPoisDistance);
-		currentPoisName = (TextView)findViewById(R.id.currentPoisName);
-		currentPoisPk = (TextView)findViewById(R.id.currentPoisPk);
-		nextPois1Distance = (TextView)findViewById(R.id.nextPois1Distance);
-		nextPois1Name = (TextView)findViewById(R.id.nextPois1Name);
-		nextPois2Distance = (TextView)findViewById(R.id.nextPois2Distance);
-		nextPois2Name = (TextView)findViewById(R.id.nextPois2Name);
-		nextPois2Pk = (TextView)findViewById(R.id.nextPois2Pk);
-		oldPoisPk = (TextView)findViewById(R.id.oldPoisPk);
-		nextPois1Pk = (TextView)findViewById(R.id.nextPois1Pk);
-		poisCreator = (Button)findViewById(R.id.PoisCreator);
+		poiWeb = (TextView) findViewById(R.id.poiWeb);
+		poiDescription = (TextView) findViewById(R.id.poiDescription);
+		nomPoi = (TextView) findViewById(R.id.nomPoi);
+		oldPoisDistance = (TextView) findViewById(R.id.oldPoisDistance);
+		oldPoisName = (TextView) findViewById(R.id.oldPoisName);
+		currentPoisDistance = (TextView) findViewById(R.id.currentPoisDistance);
+		currentPoisName = (TextView) findViewById(R.id.currentPoisName);
+		currentPoisPk = (TextView) findViewById(R.id.currentPoisPk);
+		nextPois1Distance = (TextView) findViewById(R.id.nextPois1Distance);
+		nextPois1Name = (TextView) findViewById(R.id.nextPois1Name);
+		nextPois2Distance = (TextView) findViewById(R.id.nextPois2Distance);
+		nextPois2Name = (TextView) findViewById(R.id.nextPois2Name);
+		nextPois2Pk = (TextView) findViewById(R.id.nextPois2Pk);
+		oldPoisPk = (TextView) findViewById(R.id.oldPoisPk);
+		nextPois1Pk = (TextView) findViewById(R.id.nextPois1Pk);
+		poisCreator = (Button) findViewById(R.id.PoisCreator);
 
 		listeVuePoi = new ArrayList<TextView>();
 
-		kmCourantTextView = (TextView)findViewById(R.id.kmcourant);
+		kmCourantTextView = (TextView) findViewById(R.id.kmcourant);
 		//poiProcheTextView = (TextView)findViewById(R.id.poiproche);
-		LineName = (TextView)findViewById(R.id.trajet);
+		LineName = (TextView) findViewById(R.id.trajet);
 
-		Bundle b    = getIntent().getExtras();
-		nodeList    = b.getParcelable("listeNoeud");
+		Bundle b = getIntent().getExtras();
+		nodeList = b.getParcelable("listeNoeud");
 		LineName.setText(b.getString("LineName"));
 		idLigne = b.getString("idLigne");
 		listePois = b.getParcelable("listePois");
@@ -142,11 +157,11 @@ public class CarteActivity extends Activity implements LocationListener {
 		// Ligne de Train
 		myPath = new PathOverlay(Color.RED, this);
 
-		for(Noeud noeud : nodeList){
-			if(noeud.isEstUneGare()){
+		for (Noeud noeud : nodeList) {
+			if (noeud.isEstUneGare()) {
 				gares.add(noeud);
-			}else{
-				GeoPoint pt = new GeoPoint(Double.valueOf(noeud.getLat()),Double.valueOf(noeud.getLon()));
+			} else {
+				GeoPoint pt = new GeoPoint(Double.valueOf(noeud.getLat()), Double.valueOf(noeud.getLon()));
 
 				myPath.addPoint(pt);
 			}
@@ -168,50 +183,55 @@ public class CarteActivity extends Activity implements LocationListener {
 
 		ArrayList<OverlayItem> mItems = new ArrayList<OverlayItem>();
 
-		for(Noeud noeud : gares){
-			OverlayItem gare = new OverlayItem("gare", noeud.getNom(), new GeoPoint(Double.valueOf(noeud.getLat()),Double.valueOf(noeud.getLon())));
+		for (Noeud noeud : gares) {
+			OverlayItem gare = new OverlayItem("gare", noeud.getNom(), new GeoPoint(Double.valueOf(noeud.getLat()), Double.valueOf(noeud.getLon())));
 			Drawable newMarker = this.getResources().getDrawable(R.drawable.gare);
 			gare.setMarker(newMarker);
 			mItems.add(gare);
 		}
 		affichageGares = new ItemizedIconOverlay<OverlayItem>(getApplicationContext(), mItems, new OnItemGestureListener<OverlayItem>() {
-			@Override public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-				Toast.makeText(CarteActivity.this, item.getTitle()+": "+item.getSnippet(), Toast.LENGTH_SHORT).show();
+			@Override
+			public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+				Toast.makeText(CarteActivity.this, item.getTitle() + ": " + item.getSnippet(), Toast.LENGTH_SHORT).show();
 				return true;
 			}
-			@Override public boolean onItemLongPress(final int index, final OverlayItem item) {
+
+			@Override
+			public boolean onItemLongPress(final int index, final OverlayItem item) {
 				return true;
 			}
-		} );
+		});
 
 
 		//affichage des pois
 		ArrayList<OverlayItem> pItems = new ArrayList<OverlayItem>();
 
-		for(Poi poi : listePois){
+		for (Poi poi : listePois) {
 
 			Location locationT = new Location("poi");
 			locationT.setLatitude(Double.valueOf(poi.getLat()));
 			locationT.setLongitude(Double.valueOf(poi.getLon()));
 			float distance = debutLigne.distanceTo(locationT);
-			poi.setPointKilometrique((distance/1000));
+			poi.setPointKilometrique((distance / 1000));
 
-			OverlayItem poInt = new OverlayItem("Point d'interet", poi.getNom(), new GeoPoint(Double.valueOf(poi.getLat()),Double.valueOf(poi.getLon())));
+			OverlayItem poInt = new OverlayItem("Point d'interet", poi.getNom(), new GeoPoint(Double.valueOf(poi.getLat()), Double.valueOf(poi.getLon())));
 			Drawable newMarker = this.getResources().getDrawable(R.drawable.poi);
 			poInt.setMarker(newMarker);
 			pItems.add(poInt);
 		}
 		Collections.sort(listePois, new PoisComparator());
 		affichagePois = new ItemizedIconOverlay<OverlayItem>(getApplicationContext(), pItems, new OnItemGestureListener<OverlayItem>() {
-			@Override public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
-				Toast.makeText(CarteActivity.this, item.getTitle()+" "+item.getSnippet(), Toast.LENGTH_SHORT).show();
+			@Override
+			public boolean onItemSingleTapUp(final int index, final OverlayItem item) {
+				Toast.makeText(CarteActivity.this, item.getTitle() + " " + item.getSnippet(), Toast.LENGTH_SHORT).show();
 				return true;
 			}
-			@Override public boolean onItemLongPress(final int index, final OverlayItem item) {
-				return true;
-			}
-		} );
 
+			@Override
+			public boolean onItemLongPress(final int index, final OverlayItem item) {
+				return true;
+			}
+		});
 
 
 		// Ajout de la ligne de train
@@ -229,13 +249,24 @@ public class CarteActivity extends Activity implements LocationListener {
 
 		this.mMapView.invalidate();
 
-		if(MainActivity.DEBUG){
-			new FakeLocation(this).start();
+		if (MainActivity.DEBUG) {
+			fLocation = new FakeLocation(this);
+			fLocation.start();
 		} else {
-            //TODO
-            /*
+
 			lManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-			lManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 100, this);*/
+			if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+				lManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 100, this);
+				/*if (!ActivityCompat.shouldShowRequestPermissionRationale(this,
+						Manifest.permission.ACCESS_FINE_LOCATION) && !ActivityCompat.shouldShowRequestPermissionRationale(this,
+						Manifest.permission.ACCESS_COARSE_LOCATION)) {
+					return;
+				}
+				return;*/
+			} else {
+				finish();
+			}
+
 		}
 	    /*lManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER, true);
 
@@ -622,5 +653,34 @@ public class CarteActivity extends Activity implements LocationListener {
 				return;
 			}
 		}
+
+	}
+
+	@Override
+	public void onStop(){
+		super.onStop();
+		if(MainActivity.DEBUG){
+			if(!fLocation.isInterrupted())fLocation.interrupt();
+		} else {
+
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		new AlertDialog.Builder(this)
+				.setTitle("Quitter ?")
+				.setMessage("Etes vous sûr de vouloir quitter le trajet en cours ?")
+				.setNegativeButton(android.R.string.no, null)
+				.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+					public void onClick(DialogInterface arg0, int arg1) {
+						callSuperOnBackPressed();
+					}
+				}).create().show();
+	}
+
+	private void callSuperOnBackPressed(){
+		super.onBackPressed();
 	}
 }

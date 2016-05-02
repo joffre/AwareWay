@@ -31,14 +31,11 @@ public class OnStartRoadListener implements Button.OnClickListener
 
     private String URL;
     private Spinner spinner;
-    private XmlTask AsynTache;
     private Fragment fragment;
 
-    public OnStartRoadListener(String uRL, XmlTask asynTache,
-                                            Fragment fragment, Spinner spinner) {
+    public OnStartRoadListener(String uRL, Fragment fragment, Spinner spinner) {
         super();
         URL = uRL;
-        AsynTache = asynTache;
         this.fragment = fragment;
         this.spinner = spinner;
     }
@@ -55,10 +52,11 @@ public class OnStartRoadListener implements Button.OnClickListener
             String nomLigne = (String) spinner.getSelectedItem();
             String[] tabLigne = nomLigne.split(": ");
             Long idRelation = Long.parseLong(tabLigne[2].trim());
-            AsynTache.execute(String.format(URL, idRelation));
+            XmlTask asynTache = new XmlTask();
+            asynTache.execute(String.format(URL, idRelation));
 
             try {
-                String result = AsynTache.get();
+                String result = asynTache.get();
 
                 // CODE INUTILE SI LE SERVEUR EST DEPLOYE
                 if (result.equals("")) {

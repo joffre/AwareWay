@@ -111,10 +111,8 @@ public class HomeFragment extends Fragment {
 		waiting_text.setVisibility(View.GONE);
         loading.setVisibility(View.GONE);
 
-		OnStartRoadListener btnListener = new OnStartRoadListener(getResources().getString(R.string.URL_GET_NODES), new XmlTask(), this, spinner);
+		OnStartRoadListener btnListener = new OnStartRoadListener(getResources().getString(R.string.URL_GET_NODES), this, spinner);
 		btnStart.setOnClickListener(btnListener);
-
-	
 	}
 
 	

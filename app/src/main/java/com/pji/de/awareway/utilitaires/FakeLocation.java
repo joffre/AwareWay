@@ -1,5 +1,7 @@
 package com.pji.de.awareway.utilitaires;
 
+import android.util.Log;
+
 import com.pji.de.awareway.activity.CarteActivity;
 import com.pji.de.awareway.liste.ListeNoeuds;
 
@@ -47,7 +49,7 @@ public class FakeLocation extends Thread {
             try {
                 Thread.sleep(2000);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //Log.d("FakeLocation",e.getMessage());
             }
             index++;
         }

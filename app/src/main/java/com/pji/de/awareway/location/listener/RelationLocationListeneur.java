@@ -17,6 +17,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
 public class RelationLocationListeneur implements LocationListener {
 
@@ -34,7 +35,11 @@ public class RelationLocationListeneur implements LocationListener {
 		this.URL = url;
 		this.AsynTache = tache;
 		this.lManager = lm;
-		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 0, this);
+		if (ActivityCompat.checkSelfPermission(frag.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(frag.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 0, this);
+		} else {
+			Log.d("RelationLocationList" , "Permissions de localisations non accordees par l'utilisateur");
+		}
 		this.fragment = frag;
 	}
 
@@ -44,7 +49,12 @@ public class RelationLocationListeneur implements LocationListener {
 	     AsynTache.execute(String.format(URL, location.getLatitude(), location.getLongitude()));
 	     try {
 			 String result = AsynTache.get();
-			 lManager.removeUpdates(this);
+			 if (ActivityCompat.checkSelfPermission(fragment.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(fragment.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+				 lManager.removeUpdates(this);
+			 }  else {
+				 Log.d("RelationLocationList" , "Permissions de localisations non accordees par l'utilisateur");
+			 }
 			 
 			 	// CODE INUTILE SI LE SERVEUR EST DEPLOYE
 				if (result.equals("")) {
