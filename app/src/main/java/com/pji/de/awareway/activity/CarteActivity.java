@@ -608,4 +608,19 @@ public class CarteActivity extends Activity implements LocationListener {
         viewSwitcher.showPrevious();
         poisInformationsOpen = false;
     }
+
+	public void showInfo(View view){
+		Log.d("CLICK", "Click !!!!!!!!!!");
+		TextView  poiInfo = (TextView)view.findViewById(view.getId());
+		for (Poi poi :listePois){
+			if(poi.getNom().toString().equals(poiInfo.getText().toString())) {
+				setPoiInfo(poi);
+				if(poisInformationsOpen == false){
+					viewSwitcher.showNext();
+					poisInformationsOpen = true;
+				}
+				return;
+			}
+		}
+	}
 }

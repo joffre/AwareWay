@@ -104,16 +104,12 @@ public class EditPoiActivity extends Activity  implements LocationListener {
         if(MainActivity.DEBUG)
         {
 
-            latitude = 50.6334024;
-            longitude = 3.0810998;
-            debutVisible = 4.6f;
+            latitude = 50.6239420;
+            longitude = 3.1241463;
+            debutVisible = 3.8f;
             finVisible =4.5f;
 
-            /*
-            latitude = 50.6287525;
-            longitude = 3.0847054;
-            debutVisible = 1.0f;
-            finVisible =1.4f;*/
+
         }
         else
         {
