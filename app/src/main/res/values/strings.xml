@@ -40,11 +40,12 @@
     <string name="pois_fragment_subway">Métro </string>
     <string name="pois_fragment_button_text">Démarrer </string>
     <string name="pois_fragment_seekbar_text">Niveau de découverte </string>
-    <string name="pois_fragment_discover_explication">Le niveau de découverte définira la fréquence
-    d\'alerte de point d\'intérêt</string>
+    <string name="pois_fragment_discover_explication">Le niveau de découverte définira le nombre
+    de point d\'intérêt que vous rencontrerez sur la route</string>
     <string name="pois_fragment_first_value_list">Veuillez sélectionnez une ligne</string>
     <string name="pois_fragment_no_road_selected">Pas de ligne sélectionnée</string>
     <string name="pois_fragment_waiting_spinner">Recherche des lignes de trains proches de vous</string>
+    <string name="pois_fragment_level_discovery">Niveau de découverte actuel : </string>
 
 
     <string name="title_activity_carte">CarteActivity</string>

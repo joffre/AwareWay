@@ -77,20 +77,20 @@ public class CarteActivity extends Activity implements LocationListener {
 	private Location dernierLocation;
 	private List<TextView> listeVuePoi;
 	private TextView LineName;
-	private TextView oldPoisDistance, oldPoisName, currentPoisDistance, currentPoisName,
+	private TextView oldPoisDistance,oldPoisName,currentPoisDistance,currentPoisName,
 			currentPoisPk, nextPois1Distance, nextPois1Name, nextPois2Distance,
 			nextPois2Name, nextPois2Pk, oldPoisPk, nextPois1Pk, nomPoi, poiWeb, poiDescription;
 	public Poi currentPoi;
 	private boolean poisInformationsOpen = false;
-	private boolean currentPoiShowed = false;
+    private boolean currentPoiShowed = false;
 	private FakeLocation fLoc;
 	private Button poisCreator;
 	private Location currentLocation;
 	private String idLigne;
-	private int indexOfCurrentPoi;
-	private ViewSwitcher viewSwitcher;
-	private Animation slide_in_left, slide_out_right;
-	private Button toMap;
+    private int indexOfCurrentPoi;
+    private ViewSwitcher viewSwitcher;
+    private Animation slide_in_left, slide_out_right;
+    private Button toMap;
 
 
 	@Override
@@ -98,33 +98,33 @@ public class CarteActivity extends Activity implements LocationListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_carte);
 
-		distanceTerminusTextView = (TextView) findViewById(R.id.terminus);
+		distanceTerminusTextView = (TextView)findViewById(R.id.terminus);
 
-		poiWeb = (TextView) findViewById(R.id.poiWeb);
-		poiDescription = (TextView) findViewById(R.id.poiDescription);
-		nomPoi = (TextView) findViewById(R.id.nomPoi);
-		oldPoisDistance = (TextView) findViewById(R.id.oldPoisDistance);
-		oldPoisName = (TextView) findViewById(R.id.oldPoisName);
-		currentPoisDistance = (TextView) findViewById(R.id.currentPoisDistance);
-		currentPoisName = (TextView) findViewById(R.id.currentPoisName);
-		currentPoisPk = (TextView) findViewById(R.id.currentPoisPk);
-		nextPois1Distance = (TextView) findViewById(R.id.nextPois1Distance);
-		nextPois1Name = (TextView) findViewById(R.id.nextPois1Name);
-		nextPois2Distance = (TextView) findViewById(R.id.nextPois2Distance);
-		nextPois2Name = (TextView) findViewById(R.id.nextPois2Name);
-		nextPois2Pk = (TextView) findViewById(R.id.nextPois2Pk);
-		oldPoisPk = (TextView) findViewById(R.id.oldPoisPk);
-		nextPois1Pk = (TextView) findViewById(R.id.nextPois1Pk);
-		poisCreator = (Button) findViewById(R.id.PoisCreator);
+        poiWeb = (TextView)findViewById(R.id.poiWeb);
+        poiDescription = (TextView)findViewById(R.id.poiDescription);
+        nomPoi = (TextView)findViewById(R.id.nomPoi);
+		oldPoisDistance = (TextView)findViewById(R.id.oldPoisDistance);
+		oldPoisName = (TextView)findViewById(R.id.oldPoisName);
+		currentPoisDistance = (TextView)findViewById(R.id.currentPoisDistance);
+		currentPoisName = (TextView)findViewById(R.id.currentPoisName);
+		currentPoisPk = (TextView)findViewById(R.id.currentPoisPk);
+		nextPois1Distance = (TextView)findViewById(R.id.nextPois1Distance);
+		nextPois1Name = (TextView)findViewById(R.id.nextPois1Name);
+		nextPois2Distance = (TextView)findViewById(R.id.nextPois2Distance);
+		nextPois2Name = (TextView)findViewById(R.id.nextPois2Name);
+		nextPois2Pk = (TextView)findViewById(R.id.nextPois2Pk);
+		oldPoisPk = (TextView)findViewById(R.id.oldPoisPk);
+		nextPois1Pk = (TextView)findViewById(R.id.nextPois1Pk);
+		poisCreator = (Button)findViewById(R.id.PoisCreator);
 
 		listeVuePoi = new ArrayList<TextView>();
 
-		kmCourantTextView = (TextView) findViewById(R.id.kmcourant);
+		kmCourantTextView = (TextView)findViewById(R.id.kmcourant);
 		//poiProcheTextView = (TextView)findViewById(R.id.poiproche);
-		LineName = (TextView) findViewById(R.id.trajet);
+		LineName = (TextView)findViewById(R.id.trajet);
 
-		Bundle b = getIntent().getExtras();
-		nodeList = b.getParcelable("listeNoeud");
+		Bundle b    = getIntent().getExtras();
+		nodeList    = b.getParcelable("listeNoeud");
 		LineName.setText(b.getString("LineName"));
 		idLigne = b.getString("idLigne");
 		listePois = b.getParcelable("listePois");
@@ -157,11 +157,11 @@ public class CarteActivity extends Activity implements LocationListener {
 		// Ligne de Train
 		myPath = new PathOverlay(Color.RED, this);
 
-		for (Noeud noeud : nodeList) {
-			if (noeud.isEstUneGare()) {
+		for(Noeud noeud : nodeList){
+			if(noeud.isEstUneGare()){
 				gares.add(noeud);
-			} else {
-				GeoPoint pt = new GeoPoint(Double.valueOf(noeud.getLat()), Double.valueOf(noeud.getLon()));
+			}else{
+				GeoPoint pt = new GeoPoint(Double.valueOf(noeud.getLat()),Double.valueOf(noeud.getLon()));
 
 				myPath.addPoint(pt);
 			}
@@ -252,7 +252,10 @@ public class CarteActivity extends Activity implements LocationListener {
 		if (MainActivity.DEBUG) {
 			fLocation = new FakeLocation(this);
 			fLocation.start();
+
 		} else {
+
+
 
 			lManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 			if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -267,11 +270,12 @@ public class CarteActivity extends Activity implements LocationListener {
 				finish();
 			}
 
+			if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+				return;
+			}
+			lManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 100, this);
 		}
-	    /*lManager.setTestProviderEnabled(LocationManager.GPS_PROVIDER, true);
 
-		if(fLoc == null || fLoc.getStatus().equals(AsyncTask.Status.FINISHED))
-			new FakeLocation().execute(this);*/
 
 		if(MainActivity.userManager.isAuthentified()){
 			poisCreator.setVisibility(View.VISIBLE);
@@ -313,58 +317,96 @@ public class CarteActivity extends Activity implements LocationListener {
 
 		//////////////////////////////////////////////////////////
 		// set up currentPoi
-		Poi currentPoiTmp = listePois.getNextPoi(kilometreCourant);
-		if(currentPoiTmp != null) {
-			currentPoisName.setText(currentPoiTmp.getNom());
-			currentPoisDistance.setText(""+df.format(currentPoiTmp.getPointKilometrique() - kilometreCourant)+"km");
-			currentPoisDistance.setText(getDistanceLabel(currentPoiTmp.getPointKilometrique() - kilometreCourant));
-			currentPoisPk.setText(""+currentPoiTmp.getPointKilometrique());
+        Poi currentPoiTmp = listePois.getNextPoi(kilometreCourant);
 
-			// set up old poi
-			indexOfCurrentPoi = listePois.indexOf(currentPoiTmp);
-			if (indexOfCurrentPoi > 0) {
-				Poi oldPoi = listePois.get(indexOfCurrentPoi - 1);
-				oldPoisName.setText(oldPoi.getNom());
-				oldPoisDistance.setText(getDistanceLabel(oldPoi.getPointKilometrique() - kilometreCourant));
-				oldPoisPk.setText(""+oldPoi.getPointKilometrique());
-			}
+        if(currentPoi != currentPoiTmp){
+            currentPoiShowed = false;
+        }
+        currentPoi = currentPoiTmp;
 
-			// set up next pois : nxtPois1
-			if (indexOfCurrentPoi < listePois.size() - 2) {
-				Poi nextPoi1 = listePois.get(indexOfCurrentPoi + 2);
-				nextPois2Name.setText(nextPoi1.getNom());
-				nextPois2Distance.setText(getDistanceLabel(nextPoi1.getPointKilometrique() - kilometreCourant));
-				nextPois2Pk.setText(""+nextPoi1.getPointKilometrique());
-			}
-			// nextpoi 2
-			if (indexOfCurrentPoi < listePois.size() - 1) {
-				Poi nextPoi2 = listePois.get(indexOfCurrentPoi + 1);
-				nextPois1Name.setText(nextPoi2.getNom());
-				nextPois1Distance.setText(getDistanceLabel(nextPoi2.getPointKilometrique() - kilometreCourant));
-				nextPois1Pk.setText(""+nextPoi2.getPointKilometrique());
-			}
-		}
+        if(currentPoiTmp != null) {
+            currentPoisName.setText(currentPoiTmp.getNom());
+            currentPoisDistance.setText(getDistanceLabel(currentPoiTmp.getPointKilometrique() - kilometreCourant));
+            Log.d("DEBUG", "" + (currentPoiTmp.getPointKilometrique() - kilometreCourant));
+            currentPoisPk.setText(df.format(currentPoiTmp.getPointKilometrique()));
 
-		for(int i=0;i<listeVuePoi.size();i++){
-			TextView textview = listeVuePoi.get(i);
-			if(listePois.size() > i){
-				Poi poi = listePois.get(i);
-				textview.setText(df.format(poi.getDistance())+"km :"+poi.getNom());
-				setOnClickListenerPoiTextView(textview, i);
-			}else{
-				setOnClickListenerPoiTextView(textview, -1);
-			}
-		}
+            // set up old poi
+            indexOfCurrentPoi = listePois.indexOf(currentPoiTmp);
+            if (indexOfCurrentPoi > 0) {
+                Poi oldPoi = listePois.get(indexOfCurrentPoi - 1);
+                oldPoisName.setText(oldPoi.getNom());
+                oldPoisDistance.setText(getDistanceLabel(oldPoi.getPointKilometrique() - kilometreCourant));
+                oldPoisPk.setText(df.format(oldPoi.getPointKilometrique()));
+            }
 
-		//CurentPoisVisibility
-		if(checkCurrentPoisVisibility(kilometreCourant, currentPoiTmp))
-		{
-			//show the informations
+            // set up next pois : nxtPois1
+            if (indexOfCurrentPoi < listePois.size() - 2) {
+                Poi nextPoi1 = listePois.get(indexOfCurrentPoi + 2);
+                nextPois2Name.setText(nextPoi1.getNom());
+                nextPois2Distance.setText(getDistanceLabel(nextPoi1.getPointKilometrique() - kilometreCourant));
+                nextPois2Pk.setText(df.format(nextPoi1.getPointKilometrique()));
+            } else {
+                nextPois2Name.setText(getResources().getString(R.string.map_name));
+                nextPois2Distance.setText(getResources().getString(R.string.map_distance));
+                nextPois2Pk.setText(getResources().getString(R.string.map_pk));
+            }
+            // nextpoi 2
+            if (indexOfCurrentPoi < listePois.size() - 1) {
+                Poi nextPoi2 = listePois.get(indexOfCurrentPoi + 1);
+                nextPois1Name.setText(nextPoi2.getNom());
+                nextPois1Distance.setText(getDistanceLabel(nextPoi2.getPointKilometrique() - kilometreCourant));
+                nextPois1Pk.setText(df.format(nextPoi2.getPointKilometrique()));
+            }
+            else {
+                nextPois1Name.setText(getResources().getString(R.string.map_name));
+                nextPois1Distance.setText(getResources().getString(R.string.map_distance));
+                nextPois1Pk.setText(getResources().getString(R.string.map_pk));
+            }
+        } else {
+                    /*currentPoisName.setText(getResources().getString(R.string.map_name));
+                    currentPoisDistance.setText(getResources().getString(R.string.map_distance));
+                    currentPoisPk.setText(getResources().getString(R.string.map_pk));
 
-            Log.d("DEBUG POI INFORMATIONS", currentPoiTmp.getNom() + " is near to you");
-		}
+                    nextPois1Name.setText(getResources().getString(R.string.map_name));
+                    nextPois1Distance.setText(getResources().getString(R.string.map_distance));
+                    nextPois1Pk.setText(getResources().getString(R.string.map_pk));
 
-		currentPoi = currentPoiTmp;
+                    nextPois2Name.setText(getResources().getString(R.string.map_name));
+                    nextPois2Distance.setText(getResources().getString(R.string.map_distance));
+                    nextPois2Pk.setText(getResources().getString(R.string.map_pk));
+
+                    if (indexOfCurrentPoi != -1){
+                        Poi oldPoi = listePois.get(indexOfCurrentPoi - 1);
+                    oldPoisName.setText(oldPoi.getNom());
+                    oldPoisDistance.setText(getDistanceLabel(oldPoi.getPointKilometrique() - kilometreCourant));
+                    oldPoisPk.setText(df.format(oldPoi.getPointKilometrique()));
+                }*/
+            //CurentPoisVisibility
+            if(currentPoiTmp != null && checkCurrentPoisVisibility(kilometreCourant, currentPoiTmp) && currentPoiShowed == false)
+            {
+                setPoiInfo(currentPoiTmp);
+                //show the informations
+                if(poisInformationsOpen == false){
+                    viewSwitcher.showNext();
+                    poisInformationsOpen = true;
+                    currentPoiShowed = true;
+                }
+
+                Log.d("DEBUG POI INFORMATIONS", currentPoiTmp.getNom() + " is near to you");
+            }
+        }
+
+        for(int i=0;i<listeVuePoi.size();i++){
+            TextView textview = listeVuePoi.get(i);
+            if(listePois.size() > i){
+                Poi poi = listePois.get(i);
+                textview.setText(df.format(poi.getDistance())+"km :"+poi.getNom());
+                setOnClickListenerPoiTextView(textview, i);
+            }else{
+                setOnClickListenerPoiTextView(textview, -1);
+            }
+        }
+        currentPoi = currentPoiTmp;
 
 		this.mMapView.getOverlays().clear();
 		this.mMapView.getOverlays().add(myPath);

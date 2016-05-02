@@ -37,15 +37,16 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="Début"
+            android:text="Fin"
             android:id="@+id/startBtn"
+            android:visibility="invisible"
             android:onClick="startBtn"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:text="Réinitialiser"
             android:id="@+id/refreshBtn"
-            android:visibility="invisible"
+
             android:onClick="refreshBtn" />
 
     </LinearLayout>

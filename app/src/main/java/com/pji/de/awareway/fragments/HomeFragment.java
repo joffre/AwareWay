@@ -8,6 +8,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,13 +48,14 @@ public class HomeFragment extends Fragment {
 	private String idLigne;
 	private SeekBar seekbar;
 	private Spinner spinner;
-	private TextView waiting_text;
+	private TextView waiting_text, levelDiscovery;
     private ProgressBar loading;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		view = inflater.inflate(R.layout.fragment_home, null);
+		levelDiscovery = (TextView)view.findViewById(R.id.levelSeekBar);
 
 		// look if your GPS is enable
 		lManager = (LocationManager) getActivity().getSystemService(
@@ -74,15 +76,44 @@ public class HomeFragment extends Fragment {
 
 		//handle the seekBar
 		seekbar = (SeekBar)view.findViewById(R.id.seekBar);
-		seekbar.setProgress(0);
-		seekbar.incrementProgressBy(1);
-		seekbar.setMax(2);
+		seekbar.setProgress(100);
+		seekbar.incrementProgressBy(10);
+		seekbar.setMax(100);
+		seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+				levelDiscovery.setText(getResources().getString(R.string.pois_fragment_level_discovery) + " " + seekbar.getProgress() + "%");
+			}
+
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+
+			}
+
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+
+			}
+		});
+
+		levelDiscovery.setText(getResources().getString(R.string.pois_fragment_level_discovery) + " " + seekbar.getProgress() + "%");
 
         btnStart = (Button)view.findViewById(R.id.btnStart);
         btnStart.setClickable(false);
 
 		return view;
 	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		btnStart = (Button)view.findViewById(R.id.btnStart);
+		btnStart.setClickable(true);
+	}
+
+
+
+
 
 	public void populateListeRelations(String result){
 		
@@ -145,10 +176,14 @@ public class HomeFragment extends Fragment {
 				}
 				
 				listePois = ParseurXmlToBean.parseXmlToPoiList(xml);
+				Log.d("DEBUGSEEKBAR", seekbar.getProgress()+"");
+				Log.d("DEBUGSEEKBAR", seekbar.getProgress()/100.00+"");
+
+				ListePois listePoiDiscovery = listePois.setLevelOfDiscovery(seekbar.getProgress() / 100.00);
 				
 				Intent intent = new Intent(this.getActivity(),CarteActivity.class);
 				intent.putExtra("listeNoeud", (Parcelable)listeNodes);
-				intent.putExtra("listePois", (Parcelable)listePois);
+				intent.putExtra("listePois", (Parcelable)listePoiDiscovery);
 				intent.putExtra("LineName", nomLigne[0].trim());
 				intent.putExtra("idLigne", idLigne);
 				

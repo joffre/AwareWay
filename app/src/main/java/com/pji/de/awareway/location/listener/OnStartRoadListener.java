@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.pji.de.awareway.MainActivity;
 import com.pji.de.awareway.R;
-import com.pji.de.awareway.liste.ListePois;
 import com.pji.de.awareway.utilitaires.XmlTask;
 import com.pji.de.awareway.webbridge.AABridge;
 
@@ -43,12 +42,14 @@ public class OnStartRoadListener implements Button.OnClickListener
     @Override
     public void onClick(View view) {
         CheckBox c = (CheckBox)fragment.getActivity().findViewById(R.id.debugCheckBox);
+        Button btnStart = (Button)fragment.getActivity().findViewById(R.id.btnStart);
         if(c.isChecked()){
             MainActivity.DEBUG = true;
         } else {
             MainActivity.DEBUG = false;
         }
         if (spinner.getSelectedItemPosition() > 0) {
+            btnStart.setClickable(false);
             String nomLigne = (String) spinner.getSelectedItem();
             String[] tabLigne = nomLigne.split(": ");
             Long idRelation = Long.parseLong(tabLigne[2].trim());
@@ -84,6 +85,7 @@ public class OnStartRoadListener implements Button.OnClickListener
 
                 ((com.pji.de.awareway.fragments.HomeFragment) fragment).populateListeNoeud(result,
                         tabLigne);
+                spinner.setVisibility(View.VISIBLE);
 
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block

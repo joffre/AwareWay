@@ -47,6 +47,10 @@ public class EditPoiActivity extends Activity  implements LocationListener {
         refreshBtn = (Button)findViewById(R.id.refreshBtn);
         name = (EditText)findViewById(R.id.edit_poi_name);
         description = (EditText)findViewById(R.id.edit_poi_description);
+
+        //init startPk
+        if(currentLocation != null)
+            startPk = (debutLigne.distanceTo(currentLocation)/1000)+1.0f;
     }
 
     public void showToast(final String toast)
@@ -64,7 +68,7 @@ public class EditPoiActivity extends Activity  implements LocationListener {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                if(/*startPk > 0.0 && endPk > 0.0 && */(name.getText().toString() != "")){
+                if(((startPk > 0.0 && endPk > 0.0) || MainActivity.DEBUG) && (name.getText().toString() != "")){
                     try {
                         List<String> l_value = generateURIPoiCreation();
                         List<ContentValues> params = new ArrayList<ContentValues>(2);

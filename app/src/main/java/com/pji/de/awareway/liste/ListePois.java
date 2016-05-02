@@ -1,15 +1,13 @@
 package com.pji.de.awareway.liste;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-
-import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.view.View;
 
-import com.pji.de.awareway.activity.CarteActivity;
 import com.pji.de.awareway.bean.Poi;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Random;
 
 public class ListePois extends ArrayList<Poi> implements Parcelable {
 	
@@ -111,6 +109,18 @@ public class ListePois extends ArrayList<Poi> implements Parcelable {
                 return poi;
         return null;
     }
+
+	public ListePois setLevelOfDiscovery(double level){
+		int nbPoi = (int)Math.ceil(this.size() * level);
+		ListePois l_poi = new ListePois();
+		Random r = new Random();
+		for (int i=0; i<nbPoi; i++) {
+			int random = r.nextInt(this.size());
+			l_poi.add(this.get(random));
+			this.remove(random);
+		}
+		return l_poi;
+	}
 
 	 public void sort(Comparator<Poi> comparator){
 		 this.sort(comparator);
