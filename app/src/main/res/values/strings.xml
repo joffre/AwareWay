@@ -66,9 +66,9 @@
     <string name="action_sign_in">Se connecter</string>
     <string name="action_sign_out">Se deconnecter</string>
     <string name="action_sign_in_short">Se connecter</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_invalid_email">Cette adresse mail est invalide</string>
+    <string name="error_invalid_password">Mot de passe trop court</string>
+    <string name="error_incorrect_password">Mot de passe incorrect</string>
     <string name="error_field_required">Ce champ est obligatoire</string>
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
@@ -86,17 +86,17 @@
 
     <string name="title_text">Bienvenue sur Aware Way\nConnectez-vous ou enregistrez-vous</string>
     !-- Sign-in status messages -->
-    <string name="signed_in_fmt">Signed in as: %s</string>
-    <string name="signed_in">Signed in</string>
-    <string name="signing_in">Signing in…</string>
-    <string name="signed_out">Signed out</string>
+    <string name="signed_in_fmt">Connecté en temps que: %s</string>
+    <string name="signed_in">Connecté</string>
+    <string name="signing_in">Connexion…</string>
+    <string name="signed_out">Déconnecté</string>
     <string name="signed_in_err">"Error: please check logs."</string>
     <string name="error_null_person">
         Error: Plus.PeopleApi.getCurrentPerson returned null. Ensure that the Google+ API is
         enabled for your project, you have a properly configured google-services.json file
         and that your device has an internet connection.
     </string>
-    <string name="loading">Loading…</string>
+    <string name="loading">Chargement…</string>
     <string name="auth_code_fmt">Auth Code: %s</string>
     <string name="id_token_fmt">ID Token: %s</string>
 
@@ -104,11 +104,11 @@
     <string name="play_services_error_fmt">Google Play Services Error: %i</string>
 
     <!-- Button labels -->
-    <string name="login">Login</string>
-    <string name="sign_up">Sign Up</string>
-    <string name="sign_out">Sign Out</string>
-    <string name="disconnect">Disconnect</string>
-    <string name="account">My Account</string>
+    <string name="login">Se connecter</string>
+    <string name="sign_up">S\'enregistrer</string>
+    <string name="sign_out">Déconnexion</string>
+    <string name="disconnect">Déconnexion</string>
+    <string name="account">Mon compte</string>
     <string name="tologin">Se connecter</string>
 
     <!-- Content Description for images -->
@@ -130,9 +130,11 @@
     <!-- Server Client ID.  This should be a valid Web OAuth 2.0 Client ID obtained
          from https://console.developers.google.com/ -->
     <string name="server_client_id">1066303125006-hc13la9urgl0sflnkiptbkedhn9ts8ca.apps.googleusercontent.com</string>
-    <string name="title_activity_user">UserActivity</string>
+    <string name="title_activity_user">Mon espace</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="hello_blank_fragment">Prochainement.</string>
+
+    <string name="user_account_connect_detail">Connecté avec %s</string>
 </resources>

@@ -14,7 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_weight="3"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/linearLayout">
 
         <ImageView
             android:id="@+id/awareway_icon"
@@ -59,14 +60,16 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@color/blue_grey_900">
+        android:background="@color/blue_grey_900"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true">
 
         <com.google.android.gms.common.SignInButton
             android:id="@+id/sign_in_button"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="visible"
+            android:layout_centerInParent="true"
             tools:visibility="gone" />
         <!--
         <LinearLayout
@@ -108,8 +111,9 @@
         android:paddingRight="16dp"
 
         tools:visibility="visible"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true">
+        android:layout_below="@+id/linearLayout"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="70dp">
 
         <Button
             android:id="@+id/login_button"

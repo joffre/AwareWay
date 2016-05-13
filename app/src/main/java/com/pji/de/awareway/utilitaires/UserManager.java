@@ -66,4 +66,12 @@ public class UserManager {
     public GoogleApiClient getGoogleApiClient() {
         return this.googleAPIClient;
     }
+
+    public String getFormatedUserNameDetails(){
+        String result = "";
+        if(isAuthentified()){
+            result = AAStringUtils.capitalizeFully(getUser().getFirstName() + " " + getUser().getLastName());
+        }
+        return result;
+    }
 }

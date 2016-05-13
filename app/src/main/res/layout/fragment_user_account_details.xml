@@ -1,14 +1,79 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.pji.de.awareway.fragments.UserAccountDetailsFragment">
+    tools:context="com.pji.de.awareway.fragments.UserAccountDetailsFragment"
+    android:orientation="vertical">
 
     <!-- TODO: Update blank fragment layout -->
+
     <TextView
         android:id="@+id/user_account_text_title"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:text="@string/hello_blank_fragment"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:layout_weight="0.01"/>
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="left|top"
+        android:layout_weight="0.2">
+
+        <View
+            android:layout_width="7dp"
+            android:layout_height="fill_parent">
+        </View>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/user_profile_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:paddingTop="@dimen/nav_header_vertical_spacing"
+            android:src="@drawable/ic_launcher"
+            app:civ_border_width="2dp"
+            app:civ_border_color="@android:color/holo_orange_dark"/>
+
+        <View
+            android:layout_width="7dp"
+            android:layout_height="fill_parent">
+        </View>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/user_account_name_details"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hello_blank_fragment"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
+
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="7dp">
+            </View>
+
+            <TextView
+                android:id="@+id/user_account_connect_mode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/hello_blank_fragment"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:layout_weight="0.5"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -183,7 +183,7 @@ public class SignInActivity extends AppCompatActivity implements
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
             hideProgressDialog();
-
+            mProgressDialog.dismiss();
             if (success) {
                 finish();
             }
@@ -245,7 +245,6 @@ public class SignInActivity extends AppCompatActivity implements
             mProgressDialog.setMessage(getString(R.string.loading));
             mProgressDialog.setIndeterminate(true);
         }
-
         if(!mProgressDialog.isShowing()) mProgressDialog.show();
     }
 

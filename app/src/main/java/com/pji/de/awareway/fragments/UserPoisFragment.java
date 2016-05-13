@@ -1,13 +1,17 @@
 package com.pji.de.awareway.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.pji.de.awareway.MainActivity;
@@ -35,6 +39,7 @@ public class UserPoisFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+    private PoiAdapter adapter;
 
     public UserPoisFragment() {
         // Required empty public constructor
@@ -74,6 +79,10 @@ public class UserPoisFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_user_pois, container, false);
+        ListView listPois = (ListView) v.findViewById(R.id.list_pois);
+
+        adapter = new PoiAdapter(this, R.layout.list_view_poi_item, null);
+        listPois.setAdapter(adapter);
 
         return v;
     }
@@ -102,15 +111,17 @@ public class UserPoisFragment extends Fragment {
         mListener = null;
     }
 
-    public void updateUserPois(ListePois pois){
+    public void updateUserPoiTextView(){
         TextView textView = (TextView) getActivity().findViewById(R.id.user_pois_text_title);
-        textView.setText("Voici vos " +pois.size()+" POI(s) :");
+        textView.setText("Voici vos " +adapter.getCount()+" POI(s) :");
+    }
+    public void updateUserPois(ListePois pois){
+        adapter.setPoisList(pois);
+        adapter.notifyDataSetChanged();
+        Log.d("UpdateUserPois", ""+adapter.getCount());
+        updateUserPoiTextView();
     }
 
-    /**
-     * Represents an asynchronous login/registration task used to authenticate
-     * the user.
-     */
     public class UserPoiLoaderTask extends AsyncTask<Void, Void, ListePois> {
 
         UserPoiLoaderTask() {

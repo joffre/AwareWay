@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <View
+        android:layout_width="7dp"
+        android:layout_height="wrap_content"></View>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/poi_image"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:paddingTop="@dimen/nav_header_vertical_spacing"
+        android:src="@drawable/ic_room_white_24dp"
+        app:civ_fill_color="@color/blue_grey_700"/>
+
+    <View
+        android:layout_width="7dp"
+        android:layout_height="wrap_content"></View>
+
+    <LinearLayout
+        android:id="@+id/tvsPoi"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tvPoiName"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+
+        <View
+            android:layout_width="wrap_content"
+            android:layout_height="3dp"></View>
+        <TextView
+            android:id="@+id/tvPoiDesc"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent" />
+    </LinearLayout>
+
+
+</LinearLayout>
