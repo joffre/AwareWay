@@ -69,7 +69,7 @@ public class ParseurXmlToBean {
 							itemChild.getTextContent());
 				}
 
-				poi.setValid(Boolean.getBoolean(caracteristiquesPoi.get(VALID_ELEMENT)));
+				poi.setValid(Boolean.valueOf(caracteristiquesPoi.get(VALID_ELEMENT)));
 
 				poi.setNom(caracteristiquesPoi.get(NOM_ELEMENT));
 				poi.setCategorie(caracteristiquesPoi.get(CATEGORIE_ELEMENT));

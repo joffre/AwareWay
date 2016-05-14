@@ -3,12 +3,17 @@ package com.pji.de.awareway.fragments;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.LightingColorFilter;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.pji.de.awareway.MainActivity;
@@ -81,6 +86,13 @@ public class PoiAdapter extends ArrayAdapter<Poi> {
                 return false;
             }
         });
+
+        ImageView validImageView = (ImageView) convertView.findViewById(R.id.image_view_poi_valid);
+        validImageView.setColorFilter(new LightingColorFilter(Color.BLUE, Color.BLUE));
+        if(poi.getValid()){
+            validImageView.setImageResource(R.drawable.ic_done_black_24dp);
+            validImageView.setColorFilter(new LightingColorFilter(Color.GREEN, Color.GREEN));
+        }
 
         return convertView;
     }
