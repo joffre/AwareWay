@@ -35,6 +35,7 @@ public class ParseurXmlToBean {
 	public static final String COMMENTAIRE_ELEMENT = "commentaire";
 	public static final String CATEGORIE_ELEMENT = "categorie";
 	public static final String NOM_ELEMENT = "name";
+	public static final String VALID_ELEMENT = "valid";
 	public static final String ID_ATTRIBUT = "id";
 	public static final String LIEN_ELEMENT="lien";
 	public static final String LIEN_WEB_ELEMENT="lienweb";
@@ -67,6 +68,8 @@ public class ParseurXmlToBean {
 					caracteristiquesPoi.put(itemChild.getNodeName(),
 							itemChild.getTextContent());
 				}
+
+				poi.setValid(Boolean.getBoolean(caracteristiquesPoi.get(VALID_ELEMENT)));
 
 				poi.setNom(caracteristiquesPoi.get(NOM_ELEMENT));
 				poi.setCategorie(caracteristiquesPoi.get(CATEGORIE_ELEMENT));

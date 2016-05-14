@@ -152,7 +152,7 @@ public class HomeFragment extends Fragment {
 		idLigne = nomLigne[2].trim();
 		
 		XmlTask asynTache = new XmlTask();
-		asynTache.execute(String.format(getResources().getString(R.string.URL_GET_POIS), idLigne));
+		asynTache.execute(String.format(getResources().getString(R.string.URL_GET_VALID_POIS), idLigne));
 			String xml;
 			try {
 				xml = asynTache.get();

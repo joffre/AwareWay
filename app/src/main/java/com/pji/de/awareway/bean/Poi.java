@@ -7,6 +7,8 @@ public class Poi implements Parcelable, Comparable<Poi> {
 
 	private String id;
 
+	private boolean valid;
+
 	private String lat;
 
 	private String lon;
@@ -64,6 +66,14 @@ public class Poi implements Parcelable, Comparable<Poi> {
 
 	public Poi() {
 		super();
+	}
+
+	public boolean getValid(){
+		return this.valid;
+	}
+
+	public void setValid(boolean valid){
+		this.valid = valid;
 	}
 
 	public String getId() {

@@ -26,6 +26,7 @@
     <!-- Requête serveur -->
     <string name="URL_GET_NODES">http://5.50.85.94:8080/PJI40_serveur/osm/getNodesFromRelation/%1$s</string>
     <string name="URL_GET_POIS">http://5.50.85.94:8080/PJI40_serveur/osm/getPoisFromRelation/%1$s</string>
+    <string name="URL_GET_VALID_POIS">http://5.50.85.94:8080/PJI40_serveur/osm/getValidPoisFromRelation/%1$s</string>
     <string name="URL_GET_POIS_FILTRE">http://5.50.85.94:8080/PJI40_serveur/osm/getPoisFromRelation/%1$s/%2$s</string>
     <string name="URL_GET_RELATION_NAME">http://5.50.85.94:8080/PJI40_serveur/osm/getRelationsName/%1$s/%2$s</string>
     <string name="CREATE_POI">http://5.50.85.94:8080/PJI40_serveur/osm/ajouterPoi/%1$s/%2$s/%3$s/%4$s/%5$s/%6$s/%7$s/%8$s/%9$s/%10$s</string>
