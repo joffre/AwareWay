@@ -1,3 +1,11 @@
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".activity.CarteActivity">
 <LinearLayout
     android:id="@+id/conteneur"
     xmlns:android="http://schemas.android.com/apk/res/android"
@@ -255,18 +263,6 @@
 	   			android:layout_height="match_parent"
 		        android:id="@+id/mapView"
             android:layout_weight="1" />
-
-
-		<Button
-			android:layout_width="fill_parent"
-			android:layout_height="match_parent"
-			android:text="Création d'un POI"
-            android:textSize="14px"
-            android:layout_weight="1"
-            android:id="@+id/PoisCreator"
-            android:onClick="createPoi" />
-
-
 	</LinearLayout>
 
     <LinearLayout
@@ -334,3 +330,14 @@
     </ViewSwitcher>
 
 </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/PoisCreator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end|bottom"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@drawable/ic_add_location_white_24dp"
+            android:onClick="createPoi"/>
+
+</android.support.design.widget.CoordinatorLayout>

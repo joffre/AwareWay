@@ -14,6 +14,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.view.Menu;
@@ -84,7 +85,7 @@ public class CarteActivity extends Activity implements LocationListener {
 	private boolean poisInformationsOpen = false;
     private boolean currentPoiShowed = false;
 	private FakeLocation fLoc;
-	private Button poisCreator;
+	private FloatingActionButton poisCreator;
 	private Location currentLocation;
 	private String idLigne;
     private int indexOfCurrentPoi;
@@ -115,7 +116,7 @@ public class CarteActivity extends Activity implements LocationListener {
 		nextPois2Pk = (TextView)findViewById(R.id.nextPois2Pk);
 		oldPoisPk = (TextView)findViewById(R.id.oldPoisPk);
 		nextPois1Pk = (TextView)findViewById(R.id.nextPois1Pk);
-		poisCreator = (Button)findViewById(R.id.PoisCreator);
+		poisCreator = (FloatingActionButton) findViewById(R.id.PoisCreator);
 
 		listeVuePoi = new ArrayList<TextView>();
 

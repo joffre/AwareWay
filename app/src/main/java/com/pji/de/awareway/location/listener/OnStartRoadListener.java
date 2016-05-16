@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.pji.de.awareway.MainActivity;
 import com.pji.de.awareway.R;
+import com.pji.de.awareway.fragments.HomeFragment;
 import com.pji.de.awareway.utilitaires.XmlTask;
 import com.pji.de.awareway.webbridge.AABridge;
 
@@ -30,9 +31,9 @@ public class OnStartRoadListener implements Button.OnClickListener
 
     private String URL;
     private Spinner spinner;
-    private Fragment fragment;
+    private HomeFragment fragment;
 
-    public OnStartRoadListener(String uRL, Fragment fragment, Spinner spinner) {
+    public OnStartRoadListener(String uRL, HomeFragment fragment, Spinner spinner) {
         super();
         URL = uRL;
         this.fragment = fragment;
@@ -43,12 +44,16 @@ public class OnStartRoadListener implements Button.OnClickListener
     public void onClick(View view) {
         CheckBox c = (CheckBox)fragment.getActivity().findViewById(R.id.debugCheckBox);
         Button btnStart = (Button)fragment.getActivity().findViewById(R.id.btnStart);
+
         if(c.isChecked()){
             MainActivity.DEBUG = true;
         } else {
             MainActivity.DEBUG = false;
         }
         if (spinner.getSelectedItemPosition() > 0) {
+            btnStart.setClickable(false);
+            ((MainActivity) fragment.getActivity()).showProgressDialog("Chargement de la ligne ...");
+
             btnStart.setClickable(false);
             String nomLigne = (String) spinner.getSelectedItem();
             String[] tabLigne = nomLigne.split(": ");
@@ -82,11 +87,14 @@ public class OnStartRoadListener implements Button.OnClickListener
                 }
                 UserTravelNotifyTask travelNotifyTask = new UserTravelNotifyTask(idRelation);
                 travelNotifyTask.execute((Void) null);
-
-                ((com.pji.de.awareway.fragments.HomeFragment) fragment).populateListeNoeud(result,
-                        tabLigne);
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                fragment.populateListeNoeud(result, tabLigne);
                 spinner.setVisibility(View.VISIBLE);
-
+                btnStart.setClickable(true);
             } catch (InterruptedException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();

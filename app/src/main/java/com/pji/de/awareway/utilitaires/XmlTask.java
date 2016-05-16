@@ -32,8 +32,8 @@ public class XmlTask extends AsyncTask<String, Void, String> {
         try {
             URL url = new URL(arg0[0]);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setReadTimeout(25000);
-            conn.setConnectTimeout(25000);
+            conn.setReadTimeout(60000);
+            conn.setConnectTimeout(60000);
             conn.setRequestMethod("GET");
 
             if (conn.getResponseCode() == 200) {

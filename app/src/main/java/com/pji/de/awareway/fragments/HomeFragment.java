@@ -1,6 +1,7 @@
 package com.pji.de.awareway.fragments;
 
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.pji.de.awareway.MainActivity;
 import com.pji.de.awareway.R;
 import com.pji.de.awareway.activity.CarteActivity;
 import com.pji.de.awareway.bean.Relation;
@@ -50,6 +52,8 @@ public class HomeFragment extends Fragment {
 	private Spinner spinner;
 	private TextView waiting_text, levelDiscovery;
     private ProgressBar loading;
+
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,10 +115,6 @@ public class HomeFragment extends Fragment {
 		btnStart.setClickable(true);
 	}
 
-
-
-
-
 	public void populateListeRelations(String result){
 		
 		spinner = (Spinner) view
@@ -151,7 +151,12 @@ public class HomeFragment extends Fragment {
 		listeNodes = ParseurXmlToBean.parseXmlToNoeudList(result);
 		idLigne = nomLigne[2].trim();
 		
-		XmlTask asynTache = new XmlTask();
+		XmlTask asynTache = new XmlTask(){
+			@Override
+			public void onPostExecute(String result){
+				((MainActivity) getActivity()).hideProgressDialog();
+			}
+		};
 		asynTache.execute(String.format(getResources().getString(R.string.URL_GET_VALID_POIS), idLigne));
 			String xml;
 			try {
