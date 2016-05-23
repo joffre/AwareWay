@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity
 
     public static UserManager userManager;
 
-    private ProgressDialog mProgressDialog;
+    //private ProgressDialog mProgressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -225,7 +225,7 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
-    public void showProgressDialog(String message) {
+   /* public void showProgressDialog(String message) {
         if (mProgressDialog == null) {
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(message);
@@ -238,7 +238,7 @@ public class MainActivity extends AppCompatActivity
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.hide();
         }
-    }
+    }*/
 
     public void setHeaderImage(Bitmap image, CircleImageView view){
         view.setImageBitmap(image);

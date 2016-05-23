@@ -162,20 +162,17 @@ public class SignInActivity extends AppCompatActivity implements
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            try {
                 MainActivity.userManager.setUser(AABridge.loginWithGoogle(acct.getEmail()), acct.getPhotoUrl());
                 Log.d(LoginActivity.class.getName(), "Authentificated (google)  : " +MainActivity.userManager.isAuthentified());
-                Thread.sleep(2000);
+
                 MainActivity.userManager.setGoogleAPIClient(mGoogleApiClient);
                 if(MainActivity.userManager.isAuthentified()){
                     updateUI(true);
                     AwarePreferences.setBooleanPreference(AwarePreferences.GOOGLE_AUTHENTIFIED, true);
                 } else {
-                    updateUI(false);
+                    //updateUI(false);
+                    AwarePreferences.setBooleanPreference(AwarePreferences.GOOGLE_AUTHENTIFIED, false);
                 }
-            } catch (InterruptedException e) {
-                return false;
-            }
             return true;
         }
 
@@ -245,7 +242,7 @@ public class SignInActivity extends AppCompatActivity implements
             mProgressDialog.setMessage(getString(R.string.loading));
             mProgressDialog.setIndeterminate(true);
         }
-        if(!mProgressDialog.isShowing()) mProgressDialog.show();
+        if(!mProgressDialog.isIndeterminate() && !mProgressDialog.isShowing()) mProgressDialog.show();
     }
 
     private void hideProgressDialog() {
@@ -258,9 +255,8 @@ public class SignInActivity extends AppCompatActivity implements
         if (signedIn) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.login_and_register).setVisibility(View.GONE);
-
         } else {
-            mStatusTextView.setText(R.string.signed_out);
+            //mStatusTextView.setText(R.string.signed_out);
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.login_and_register).setVisibility(View.VISIBLE);
         }

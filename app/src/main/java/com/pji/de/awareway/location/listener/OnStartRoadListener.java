@@ -1,7 +1,9 @@
 package com.pji.de.awareway.location.listener;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.res.AssetManager;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -43,7 +45,6 @@ public class OnStartRoadListener implements Button.OnClickListener
     @Override
     public void onClick(View view) {
         CheckBox c = (CheckBox)fragment.getActivity().findViewById(R.id.debugCheckBox);
-        Button btnStart = (Button)fragment.getActivity().findViewById(R.id.btnStart);
 
         if(c.isChecked()){
             MainActivity.DEBUG = true;
@@ -51,22 +52,38 @@ public class OnStartRoadListener implements Button.OnClickListener
             MainActivity.DEBUG = false;
         }
         if (spinner.getSelectedItemPosition() > 0) {
-            btnStart.setClickable(false);
-            ((MainActivity) fragment.getActivity()).showProgressDialog("Chargement de la ligne ...");
-
-            btnStart.setClickable(false);
+            //((MainActivity) fragment.getActivity()).showProgressDialog("Chargement de la ligne ...");
             String nomLigne = (String) spinner.getSelectedItem();
             String[] tabLigne = nomLigne.split(": ");
             Long idRelation = Long.parseLong(tabLigne[2].trim());
+
+            loadRelation(tabLigne, idRelation);
+        } else {
+            Context context = view.getContext();
+            int duration = Toast.LENGTH_SHORT;
+
+            Toast toast = Toast.makeText(context, view.getResources().getString(R.string.pois_fragment_no_road_selected), duration);
+            toast.show();
+        }
+    }
+
+    private void loadRelation(final String[] tabLigne, final Long idRelation) {
+        CheckBox c = (CheckBox)fragment.getActivity().findViewById(R.id.debugCheckBox);
+        Button btnStart = (Button)fragment.getActivity().findViewById(R.id.btnStart);
+        c.setEnabled(false);
+        btnStart.setEnabled(false);
+        try {
+            String result = "";
             XmlTask asynTache = new XmlTask();
             asynTache.execute(String.format(URL, idRelation));
+            result = asynTache.get();
 
-            try {
-                String result = asynTache.get();
+            if (!result.equals("")) {
+                UserTravelNotifyTask travelNotifyTask = new UserTravelNotifyTask(idRelation);
+                travelNotifyTask.execute((Void) null);
 
-                // CODE INUTILE SI LE SERVEUR EST DEPLOYE
-                if (result.equals("")) {
-                    AssetManager asm = fragment.getResources().getAssets();
+                fragment.populateListeNoeud(result, tabLigne);
+                    /*AssetManager asm = fragment.getResources().getAssets();
 
                     try {
                         StringBuilder response = new StringBuilder();
@@ -83,31 +100,28 @@ public class OnStartRoadListener implements Button.OnClickListener
                     } catch (IOException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
-                    }
-                }
-                UserTravelNotifyTask travelNotifyTask = new UserTravelNotifyTask(idRelation);
-                travelNotifyTask.execute((Void) null);
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                fragment.populateListeNoeud(result, tabLigne);
-                spinner.setVisibility(View.VISIBLE);
-                btnStart.setClickable(true);
-            } catch (InterruptedException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (ExecutionException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        } else {
-            Context context = view.getContext();
-            int duration = Toast.LENGTH_SHORT;
+                    }*/
+            } else {
+                new AlertDialog.Builder(fragment.getActivity())
+                        .setTitle("Récupération des données impossible (Ligne)")
+                        .setMessage("Voulez vous réessayez ? Vérifiez que vous êtes connecté à internet")
+                        .setNegativeButton(android.R.string.no, null)
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
-            Toast toast = Toast.makeText(context, view.getResources().getString(R.string.pois_fragment_no_road_selected), duration);
-            toast.show();
+                            public void onClick(DialogInterface arg0, int arg1) {
+                                loadRelation(tabLigne, idRelation);
+                            }
+                        }).create().show();
+            }
+            //spinner.setVisibility(View.VISIBLE);
+            c.setEnabled(true);
+            btnStart.setEnabled(true);
+        } catch (InterruptedException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ExecutionException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 

@@ -1,8 +1,10 @@
 package com.pji.de.awareway.fragments;
 
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.AssetManager;
 import android.location.LocationManager;
@@ -11,8 +13,10 @@ import android.os.Parcelable;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -66,8 +70,19 @@ public class HomeFragment extends Fragment {
 				Context.LOCATION_SERVICE);
 
 		if (lManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-			new RelationLocationListeneur(getResources().getString(
-					R.string.URL_GET_RELATION_NAME), new XmlTask(), lManager, this);
+			final RelationLocationListeneur rll = new RelationLocationListeneur(getResources().getString(
+					R.string.URL_GET_RELATION_NAME), lManager, this);
+			spinner = (Spinner) view.findViewById(R.id.spinner);
+			spinner.setOnTouchListener(new View.OnTouchListener() {
+				@Override
+				public boolean onTouch(View v, MotionEvent event) {
+					if(spinner.getCount() == 0){
+						rll.refresh();
+						return true;
+					}
+					return false;
+				}
+			});
 		} else {
 			Toast.makeText(
 					getActivity(),
@@ -149,62 +164,71 @@ public class HomeFragment extends Fragment {
 	
 	public void populateListeNoeud(String result, String[] nomLigne){
 		listeNodes = ParseurXmlToBean.parseXmlToNoeudList(result);
+		System.out.println("NB noeuds : " + listeNodes.size());
 		idLigne = nomLigne[2].trim();
-		
-		XmlTask asynTache = new XmlTask(){
-			@Override
-			public void onPostExecute(String result){
-				((MainActivity) getActivity()).hideProgressDialog();
-			}
-		};
-		asynTache.execute(String.format(getResources().getString(R.string.URL_GET_VALID_POIS), idLigne));
-			String xml;
-			try {
-				xml = asynTache.get();
-			 
-			 	// CODE INUTILE SI LE SERVEUR EST DEPLOYE
-				if (xml.equals("")) {
-					AssetManager asm = this.getResources().getAssets();
+		populateListePoi(nomLigne);
+	}
+
+	public void populateListePoi(final String[] nomLigne){
+		String xml;
+		try {
+			XmlTask asynTache = new XmlTask();
+			asynTache.execute(String.format(getResources().getString(R.string.URL_GET_VALID_POIS), idLigne));
+			xml = asynTache.get();
+
+			if (!xml.equals("")) {
+				listePois = ParseurXmlToBean.parseXmlToPoiList(xml);
+				Log.d("DEBUGSEEKBAR", seekbar.getProgress()+"");
+				Log.d("DEBUGSEEKBAR", seekbar.getProgress()/100.00+"");
+
+				ListePois listePoiDiscovery = listePois.setLevelOfDiscovery(seekbar.getProgress() / 100.00);
+
+				startCarteActivity(listePoiDiscovery, nomLigne);
+
+					/*AssetManager asm = this.getResources().getAssets();
 
 						StringBuilder response = new StringBuilder();
 						InputStream is = asm.open("getPoisFromRelation.xml");
-						
+
 						BufferedReader br = new BufferedReader(
 								new InputStreamReader(is));
 						String line;
 						while ((line = br.readLine()) != null) {
 							response.append(line);
 						}
-						
-						xml = response.toString();
-					
-				}
-				
-				listePois = ParseurXmlToBean.parseXmlToPoiList(xml);
-				Log.d("DEBUGSEEKBAR", seekbar.getProgress()+"");
-				Log.d("DEBUGSEEKBAR", seekbar.getProgress()/100.00+"");
 
-				ListePois listePoiDiscovery = listePois.setLevelOfDiscovery(seekbar.getProgress() / 100.00);
-				
-				Intent intent = new Intent(this.getActivity(),CarteActivity.class);
-				intent.putExtra("listeNoeud", (Parcelable)listeNodes);
-				intent.putExtra("listePois", (Parcelable)listePoiDiscovery);
-				intent.putExtra("LineName", nomLigne[0].trim());
-				intent.putExtra("idLigne", idLigne);
-				
-				startActivity(intent);
-			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (ExecutionException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+						xml = response.toString();
+					*/
+			} else {
+				new AlertDialog.Builder(this.getActivity())
+						.setTitle("Récupération des données impossible (Pois)")
+						.setMessage("Voulez vous réessayez ? Vérifiez que vous êtes connecté à internet")
+						.setNegativeButton(android.R.string.no, null)
+						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+							public void onClick(DialogInterface arg0, int arg1) {
+								populateListePoi(nomLigne);
+							}
+						}).create().show();
 			}
+		} catch (InterruptedException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (ExecutionException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
-	
+
+	public void startCarteActivity(ListePois listePoiDiscovery, String[] nomLigne){
+		Intent intent = new Intent(this.getActivity(),CarteActivity.class);
+		intent.putExtra("listeNoeud", (Parcelable)listeNodes);
+		intent.putExtra("listePois", (Parcelable)listePoiDiscovery);
+		intent.putExtra("LineName", nomLigne[0].trim());
+		intent.putExtra("idLigne", idLigne);
+
+		startActivity(intent);
+	}
 	public static com.pji.de.awareway.fragments.HomeFragment newInstance() {
 		return new com.pji.de.awareway.fragments.HomeFragment();
 	}

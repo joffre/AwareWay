@@ -9,7 +9,9 @@ import java.util.concurrent.ExecutionException;
 import com.pji.de.awareway.utilitaires.XmlTask;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.location.Location;
@@ -25,15 +27,12 @@ public class RelationLocationListeneur implements LocationListener {
 
 	private String URL;
 
-	private XmlTask AsynTache;
-
 	private LocationManager lManager;
 
 	private Fragment fragment;
 
-	public RelationLocationListeneur(String url, XmlTask tache, LocationManager lm, Fragment frag) {
+	public RelationLocationListeneur(String url, LocationManager lm, Fragment frag) {
 		this.URL = url;
-		this.AsynTache = tache;
 		this.lManager = lm;
 		if (ActivityCompat.checkSelfPermission(frag.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(frag.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 			lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 60000, 0, this);
@@ -46,39 +45,59 @@ public class RelationLocationListeneur implements LocationListener {
 	@Override
 	public void onLocationChanged(Location location) {
 	     position = location;
-	     AsynTache.execute(String.format(URL, location.getLatitude(), location.getLongitude()));
-	     try {
-			 String result = AsynTache.get();
-			 if (ActivityCompat.checkSelfPermission(fragment.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(fragment.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+		 if (ActivityCompat.checkSelfPermission(fragment.getActivity(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(fragment.getActivity(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-				 lManager.removeUpdates(this);
-			 }  else {
-				 Log.d("RelationLocationList" , "Permissions de localisations non accordees par l'utilisateur");
-			 }
-			 
-			 	// CODE INUTILE SI LE SERVEUR EST DEPLOYE
-				if (result.equals("")) {
-					AssetManager asm = fragment.getResources().getAssets();
-					
+			 lManager.removeUpdates(this);
+		 }  else {
+			 Log.d("RelationLocationList" , "Permissions de localisations non accordees par l'utilisateur");
+		 }
+
+		 loadRelation(location);
+	}
+
+	public void refresh(){
+		if(position != null)loadRelation(position);
+	}
+
+	public void loadRelation(final Location location) {
+		XmlTask asynTask = new XmlTask();
+		asynTask.execute(String.format(URL, location.getLatitude(), location.getLongitude()));
+
+		try {
+			String result = asynTask.get();
+			if (!result.equals("")) {
+				((com.pji.de.awareway.fragments.HomeFragment) fragment).populateListeRelations(result);
+			} else {
+					/*AssetManager asm = fragment.getResources().getAssets();
+
 					try {
 						StringBuilder response = new StringBuilder();
 						InputStream is = asm.open("getRelationName.xml");
-						
+
 						BufferedReader br = new BufferedReader(
 								new InputStreamReader(is));
 						String line;
 						while ((line = br.readLine()) != null) {
 							response.append(line);
 						}
-						
+
 						result = response.toString();
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					}
-				} 
-			 
-			 ((com.pji.de.awareway.fragments.HomeFragment)fragment).populateListeRelations(result);
+					}*/
+
+				new AlertDialog.Builder(fragment.getActivity())
+						.setTitle("Récupération des lignes proches de vous impossible")
+						.setMessage("Voulez vous réessayez ? Vérifiez que vous êtes connecté à internet")
+						.setNegativeButton(android.R.string.no, null)
+						.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+							public void onClick(DialogInterface arg0, int arg1) {
+								loadRelation(location);
+							}
+						}).create().show();
+			}
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -86,8 +105,8 @@ public class RelationLocationListeneur implements LocationListener {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
+
 
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {		
