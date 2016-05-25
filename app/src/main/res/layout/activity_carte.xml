@@ -312,7 +312,8 @@
             android:textSize="20dp"
             android:text="@string/webPoi"
             android:gravity="center"
-            android:textColor="#ffffff"/>
+            android:textColor="#ffffff"
+            android:autoLink="web"/>
 
 
         <Button
